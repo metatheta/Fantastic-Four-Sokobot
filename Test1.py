@@ -7,3 +7,5 @@ x = int(input("Give a number: "))
 y = int(input("Give another number: "))
 
 print(f"The product of the numbers is {x * y}")
+
+#additional comment to prove the git checkout works
