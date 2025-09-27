@@ -17,7 +17,7 @@ public class Driver {
         while (!curr.isGoal()) 
         {
             //add to fronteir
-            generated = curr.getSuccessors();
+            generated = curr.getChildren();
             for (int x = 0; x < generated.size(); x++)
             {
                 frontier.addLast(generated.get(x));

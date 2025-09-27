@@ -78,27 +78,27 @@ public class Node
         return new Node(newG1.contents, newG2.contents, newG3.contents, this);
     }
 
-    public List<Node> getSuccessors() 
+    public List<Node> getChildren() 
     {
-        List<Node> successors = new ArrayList<>();
+        List<Node> children = new ArrayList<>();
 
         // Try all 6 pours
         if (g1.contents > 0 && g2.contents < g2.limit)
-            successors.add(pour(g1, g2));
+            children.add(pour(g1, g2));
         if (g1.contents > 0 && g3.contents < g3.limit)
-            successors.add(pour(g1, g3));
+            children.add(pour(g1, g3));
 
         if (g2.contents > 0 && g1.contents < g1.limit)
-            successors.add(pour(g2, g1));
+            children.add(pour(g2, g1));
         if (g2.contents > 0 && g3.contents < g3.limit)
-            successors.add(pour(g2, g3));
+            children.add(pour(g2, g3));
 
         if (g3.contents > 0 && g1.contents < g1.limit)
-            successors.add(pour(g3, g1));
+            children.add(pour(g3, g1));
         if (g3.contents > 0 && g2.contents < g2.limit)
-            successors.add(pour(g3, g2));
+            children.add(pour(g3, g2));
 
-        return successors;
+        return children;
     }
     
 }
