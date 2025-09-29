@@ -2,44 +2,21 @@ package solver;
 
 public class Coords implements Comparable<Coords>{
     
-    private int x;
-    private int y;
+    public final int x;
+    public final int y;
     
     public Coords(int x, int y)
     {
-        setx(x);
-        sety(y);
-    }
-
-    public void setx(int i)
-    {
-        x = i;
-    }
-
-    public void sety(int i)
-    {
-        y = i;
-    }
-
-    public int getx()
-    {
-        return x;
-    }
-
-    public int gety()
-    {
-        return y;
+        this.x = x;
+        this.y = y;
     }
 
     @Override
     public boolean equals(Object o)
     {
-        if (!(o instanceof Coords))
+        if (!(o instanceof Coords c))
             return false;
-
-        Coords c = (Coords)o;
-
-        return c.getx() == x && c.gety() == y;
+        return c.x == x && c.y == y;
     }
 
      @Override
