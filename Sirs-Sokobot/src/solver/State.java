@@ -2,7 +2,7 @@ package solver;
 
 import java.util.*;
 
-public final class State {
+public class State {
     public final Coords player;
     public final Set<Coords> boxes;
 
