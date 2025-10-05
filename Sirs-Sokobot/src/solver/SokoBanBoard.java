@@ -2,39 +2,51 @@ package solver;
 
 import java.util.*;
 
-public final class SokoBanBoard {
+public class SokoBanBoard {
     public final int width;
     public final int height;
-    public final int N;              // width * height
     private final char[][] map;
-    private final List<Coords> goals;
+    private final Set<Coords> wallSet;
     private final Set<Coords> goalSet; // Used for
 
     public SokoBanBoard(int width, int height, char[][] map) {
         this.width = width;
         this.height = height;
-        this.N = width * height;
         this.map = map.clone();
-        this.goals = new ArrayList<>();
+
         this.goalSet = new HashSet<>();
+        this.wallSet = new HashSet<>();
         for (int i = 0; i < height; i++) { // Rows
             for (int j = 0; j < width; j++) { // Columns
                 if(map[i][j] == '.') {
-                    this.goals.add(new Coords(i, j));
                     this.goalSet.add(new Coords(i, j));
+                }
+                if(map[i][j] == '#') {
+                    this.wallSet.add(new Coords(i, j));
                 }
             }
         }
     }
-    public char getCell(int row, int col) {
-        return map[row][col];
+
+    public char[][] getMap() {
+        return map;
     }
 
-    public List<Coords> getGoals() {
-        return Collections.unmodifiableList(goals);
+    public Set<Coords> getWallSet() {
+        return wallSet;
+    }
+
+    public Set<Coords> getGoalSet() {
+        return goalSet;
+    }
+
+    public boolean isWall(Coords c) {
+        return wallSet.contains(c);
     }
 
     public boolean isGoalCell(Coords c) {
         return goalSet.contains(c);
     }
+
+
 }
