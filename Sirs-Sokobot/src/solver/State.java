@@ -55,7 +55,7 @@ public class State {
                 && isIn(walls, row + 2, col) && (!isIn(goals, row - 1, col) && !isIn(walls, row + 1, col)))
                 return true;
 
-            //box has 3 walls to the left of it and 1 wall on the top and another on the bottom
+            //box has 3 walls to the right of it and 1 wall on the top and another on the bottom
             if(isIn(walls, row, col + 1) && isIn(walls, row - 1, col + 1)
                 && isIs(walls, row + 1, col + 1) && isIn(walls, row - 2, col)
                 && isIn(walls, row + 2, col) && (!isIn(goals, row - 1, col) && !isIn(walls, row + 1, col)))
