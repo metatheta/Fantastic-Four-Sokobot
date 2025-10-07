@@ -22,8 +22,8 @@ public class StateGenerator {
         return !walls.contains(beyond) && !boxes.contains(beyond);
     }
 
-    public ArrayList<Direction> generateActions(State state) {
-        ArrayList<Direction> actionList = new ArrayList<Direction>();
+    public ArrayList<String> generateActions(State state) {
+        ArrayList<String> actionList = new ArrayList<String>();
         int row = state.player.row;
         int col = state.player.col;
         Set<Coords> boxes = state.boxes;
@@ -32,32 +32,32 @@ public class StateGenerator {
 
         // up
         if (isActionValid(boxes, new Coords(row - 1, col), new Coords(row - 2, col)))
-            actionList.add(Direction.U);
+            actionList.add("u");
         // right
         if (isActionValid(boxes, new Coords(row, col + 1), new Coords(row, col + 2)))
-            actionList.add(Direction.R);
+            actionList.add("r");
         // down
         if (isActionValid(boxes, new Coords(row + 1, col), new Coords(row + 2, col)))
-            actionList.add(Direction.D);
+            actionList.add("d");
         // left
         if (isActionValid(boxes, new Coords(row, col - 1), new Coords(row, col - 2)))
-            actionList.add(Direction.L);
+            actionList.add("l");
 
         return actionList;
     }
 
     // DOESN'T PERFORM ANY IN BOUNDS CHECKS (idk how to make it yet ToT)
     // Assumes you used the generateActions method to get the direction used in the parameter
-    public State applyAction(State state, Direction dir) {
+    public State applyAction(State state,String dir) {
         int row = state.player.row;
         int col = state.player.col;
 
         int dr = 0, dc = 0;
         switch (dir) {
-            case U -> dr = -1;
-            case R -> dc = 1;
-            case D -> dr = 1;
-            case L -> dc = -1;
+            case "u" -> dr = -1;
+            case "r" -> dc = 1;
+            case "d" -> dr = 1;
+            case "l" -> dc = -1;
             default -> throw new IllegalArgumentException("Unknown direction: " + dir);
         }
 

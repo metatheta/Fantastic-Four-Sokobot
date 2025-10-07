@@ -6,9 +6,9 @@ public class Node {
     public final Node parent;
     public final State state;
     public final int priorityValue; // heuristic / priority (A*, etc.)
-    public final Direction move;       // direction enum (e.g. "u","r","d","l")
+    public final String move;       // direction enum (e.g. "u","r","d","l")
 
-    public Node(State state, Node parent, int priorityValue, Direction move) {
+    public Node(State state, Node parent, int priorityValue, String move) {
         this.state = state;
         this.parent = parent;
         this.priorityValue = priorityValue;
