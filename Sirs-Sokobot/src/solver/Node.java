@@ -15,6 +15,15 @@ public class Node {
         this.move = move;
     }
 
+    /*
+        given a current node A, you pass the child node's state attribute 
+        to check if a child node went back to A's previous state
+    */
+    public boolean wentBack(State childState)
+    {
+        return parent.state.equals(childState);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
