@@ -21,7 +21,11 @@ public class Node {
     */
     public boolean wentBack(State childState)
     {
-        return parent.state.equals(childState);
+        State p = parent.state;
+        if (p == null)
+            return false;
+        else 
+            return p.equals(childState);
     }
 
     @Override
