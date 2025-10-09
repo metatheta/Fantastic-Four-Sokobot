@@ -11,7 +11,9 @@ public class State {
         this.boxes = new HashSet<>(boxes);
     }
 
-    public boolean isDeadlock(HashSet<Coords> goals, Set<Coords> walls)
+    //non pring addition
+    //note, if deadlockSet fails, uncomment the multi line thing inside
+    public boolean isCornerDeadlock(HashSet<Coords> goals, Set<Coords> walls)
     {
         int row;
         int col;
@@ -37,6 +39,7 @@ public class State {
             if(isIn(walls, row + 1, col) && isIn(walls, row, col + 1))
                 return true;
 
+            /*
             //box has 3 walls above it and 1 wall on each side
             if(isIn(walls, row - 1, col) && isIn(walls, row - 1, col - 1)
                 && isIs(walls, row - 1, col + 1) && isIn(walls, row, col - 2)
@@ -59,6 +62,26 @@ public class State {
             if(isIn(walls, row, col + 1) && isIn(walls, row - 1, col + 1)
                 && isIs(walls, row + 1, col + 1) && isIn(walls, row - 2, col)
                 && isIn(walls, row + 2, col) && (!isIn(goals, row - 1, col) && !isIn(walls, row + 1, col)))
+                return true;
+            */
+        }
+
+        return false;
+    }
+
+    /* comment this if the 4 deadlock set maker functions dont work */
+    //non pring addition
+    public boolean isDeadlock(HashSet<Coords> deadlocks)
+    {
+        int row;
+        int col;
+
+        for(Coords box : boxes)
+        {
+            row = box.row;
+            col = box.col;
+
+            if(isIn(deadlocks, row, col))
                 return true;
         }
 

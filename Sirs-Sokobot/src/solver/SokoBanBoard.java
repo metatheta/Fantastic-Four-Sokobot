@@ -8,6 +8,56 @@ public class SokoBanBoard {
     private final char[][] map;
     private final Set<Coords> wallSet;
     private final Set<Coords> goalSet; // Used for
+    private final Set<Coords> deadlockSet;
+
+    //non pring addition
+   /*
+    4 FUNCTIONS
+    one horizontally checking below
+    pseudocode:
+      wallContinuousFlag && !goalFlag<-- place in while loop
+
+      below first wall = susLeftFlag
+
+      Subfunction:
+        susLeftFlag
+        susRightFlag
+        if (youReach susRightFlag)
+            place all coords in between in the deadlockSet
+    
+    one horizontally checking above
+    pseudocode:
+      wallContinuousFlag && !goalFlag<-- place in while loop
+
+      below first wall = susLeftFlag
+
+      Subfunction:
+        susLeftFlag
+        susRightFlag
+        if (youReach susRightFlag)
+            place all coords in between in the deadlockSet
+
+    one vertically checking to the right
+    pseudocode:
+      wallContinuousFlag && !goalFlag<-- place in while loop
+
+      Subfunction:
+        susBottomFlag
+        susToplag
+        if (youReach susTopFlag)
+            place all coords in between in the deadlockSet
+
+    one vertically checking to the left
+    pseudocode:
+      wallContinuousFlag && !goalFlag<-- place in while loop
+
+      Subfunction:
+        susBottomFlag
+        susToplag
+        if (youReach susTopFlag)
+            place all coords in between in the deadlockSet
+     
+    */
 
     public SokoBanBoard(int width, int height, char[][] map) {
         this.width = width;
@@ -40,6 +90,11 @@ public class SokoBanBoard {
         return goalSet;
     }
 
+    //non pring addition
+    public Set<Coords> deadlockSet() {
+        return deadlockSet;
+    }
+
     public boolean isWall(Coords c) {
         return wallSet.contains(c);
     }
@@ -48,5 +103,9 @@ public class SokoBanBoard {
         return goalSet.contains(c);
     }
 
+    //non pring addition
+    public boolean isDeadlockCell(Coords c) {
+        return deadlockSet.contains(c);
+    }
 
 }
