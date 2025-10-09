@@ -8,6 +8,7 @@ public class BotThread extends Thread {
   private int height;
   private char[][] mapData;
   private char[][] itemsData;
+  //
 
   private String solution = null;
 
