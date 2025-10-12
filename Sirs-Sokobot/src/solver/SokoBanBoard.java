@@ -12,7 +12,7 @@ public class SokoBanBoard {
     public SokoBanBoard(int width, int height, char[][] map) {
         this.width = width;
         this.height = height;
-        this.map = map.clone();
+        this.map = map;
 
         this.goalSet = new HashSet<>();
         this.wallSet = new HashSet<>();

@@ -23,7 +23,7 @@ public class StateGenerator {
     }
 
     public ArrayList<String> generateActions(State state) {
-        ArrayList<String> actionList = new ArrayList<String>();
+        ArrayList<String> actionList = new ArrayList<>();
         int row = state.player.row;
         int col = state.player.col;
         Set<Coords> boxes = state.boxes;
@@ -46,7 +46,7 @@ public class StateGenerator {
         return actionList;
     }
 
-    // DOESN'T PERFORM ANY IN BOUNDS CHECKS (idk how to make it yet ToT)
+    // DOESN'T PERFORM ANY IN BOUNDS CHECKS (IDK how to make it yet ToT)
     // Assumes you used the generateActions method to get the direction used in the parameter
     public State applyAction(State state,String dir) {
         int row = state.player.row;
