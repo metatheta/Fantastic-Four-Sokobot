@@ -15,6 +15,16 @@ public class Node {
         this.move = move;
     }
 
+    //non pring addition
+    public boolean wentBack(State childState)
+    {
+        if (parent == null)
+            return false;
+
+        State p = parent.state;
+        return p.equals(childState);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

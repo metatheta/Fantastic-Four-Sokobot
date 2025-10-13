@@ -47,6 +47,11 @@ public class SokoBot {
 
                 // insert deadlock test here
                 // if (deadlock test bla bla bla)
+                if(childState.isCornerDeadlock(new HashSet<>(board.getGoalSet()), new HashSet<>(board.getWallSet())))
+                  continue;
+
+                if(node.wentBack(childState))
+                  continue;
 
                 Node child = new Node(childState, node, 0, action);
 
@@ -64,7 +69,7 @@ public class SokoBot {
             }
         }
 
-        return "lrlrlrlr";
+        return "lrlrlrlrudududud";
     }
 
 
