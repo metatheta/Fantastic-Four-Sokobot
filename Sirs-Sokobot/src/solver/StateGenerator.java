@@ -21,6 +21,7 @@ public class StateGenerator {
         // target has a box -> can push only if beyond is free (not wall, not box)
         return !walls.contains(beyond) && !boxes.contains(beyond);
     }
+    
 
     public ArrayList<String> generateActions(State state) {
         ArrayList<String> actionList = new ArrayList<String>();
