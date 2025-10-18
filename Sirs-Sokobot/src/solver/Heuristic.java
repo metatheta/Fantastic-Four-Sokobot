@@ -1,13 +1,26 @@
 package solver;
 
-public class Heuristic {
-	public Heuristic() {
+import java.util.HashMap;
 
+public class Heuristic {
+	public final SokoBanBoard board;
+	private HashMap<State, Integer> values;
+	
+	public Heuristic(SokoBanBoard board) {
+		this.board = board;
+		this.values = new HashMap<State, Integer>(); 
 	}
 
 	public int calculateHeuristic(State state) {
+		if (!values.containsKey(state)) {
+			return values.get(state);
+		}
+
+		int value = 0;
+
 		// manhattan distances?
 		
-		return -1;
+		values.put(state, value);
+		return value;
 	}
 }

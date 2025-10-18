@@ -4,15 +4,16 @@ import java.util.*;
 
 public class SokoBot {
     public String solveSokobanPuzzle(int width, int height, char[][] mapData, char[][] itemsData) {
-        // Initialize board
+        // Initialize board and heuristic
 		SokoBanBoard board = new SokoBanBoard(width, height, mapData);
+		Heuristic heuristic = new Heuristic(board);
 
         // Generate initial state and nodes
 		State initialState = generateInitialState(board, itemsData);
 		if (initialState.isGoal(board)) {
 			return "";
 		}
-		Node initialNode = new Node(initialState, null, "");
+		Node initialNode = new Node(initialState, null, "", heuristic);
 
 		// Generate state generator
         StateGenerator generator = new StateGenerator(
@@ -35,7 +36,7 @@ public class SokoBot {
             List<String> actions = generator.generateActions(currentNode.state);
 			for (String action : actions) {
                 State newState = generator.applyAction(currentNode.state, action);
-                Node newNode = new Node(newState, currentNode, action);
+                Node newNode = new Node(newState, currentNode, action, heuristic);
 
 				// If no valid state could be found
 				if (newState == null) {

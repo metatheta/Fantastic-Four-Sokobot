@@ -5,19 +5,17 @@ import java.util.Objects;
 public class Node {
     public final State state;
 	public final Node parent;
-    public final int heuristicValue; // heuristic / priority (A*, etc.)
-    public final String move;       // direction enum (e.g. "u","r","d","l")
+    public final String move;
+	public final int heuristicValue;
 
-    public Node(State state, Node parent, String move) {
+    public Node(State state, Node parent, String move, Heuristic heuristic) {
         this.state = state;
         this.parent = parent;
         this.move = move;
 
-		Heuristic newHeuristic = new Heuristic();
-		this.heuristicValue = newHeuristic.calculateHeuristic(this.state);
+		this.heuristicValue = heuristic.calculateHeuristic(state);
     }
 
-    //non pring addition
     public boolean wentBack(State childState)
     {
         if (parent == null)
