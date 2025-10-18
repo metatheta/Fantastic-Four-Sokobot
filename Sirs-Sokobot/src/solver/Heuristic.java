@@ -16,10 +16,10 @@ public class Heuristic {
 			return values.get(state);
 		}
 
+		// calculate manhattan distances?
+		
 		int value = 0;
 
-		// manhattan distances?
-		
 		values.put(state, value);
 		return value;
 	}

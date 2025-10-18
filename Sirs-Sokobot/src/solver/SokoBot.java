@@ -74,6 +74,7 @@ public class SokoBot {
         }
 
 		// Otherwise, give up ;(
+		System.out.println("fuck");
         return "";
     }
 
