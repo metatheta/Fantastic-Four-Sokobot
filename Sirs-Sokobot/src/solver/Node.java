@@ -3,16 +3,18 @@ package solver;
 import java.util.Objects;
 
 public class Node {
-    public final Node parent;
     public final State state;
-    public final int priorityValue; // heuristic / priority (A*, etc.)
+	public final Node parent;
+    public final int heuristicValue; // heuristic / priority (A*, etc.)
     public final String move;       // direction enum (e.g. "u","r","d","l")
 
-    public Node(State state, Node parent, int priorityValue, String move) {
+    public Node(State state, Node parent, String move) {
         this.state = state;
         this.parent = parent;
-        this.priorityValue = priorityValue;
         this.move = move;
+
+		Heuristic newHeuristic = new Heuristic();
+		this.heuristicValue = newHeuristic.calculateHeuristic(this.state);
     }
 
     //non pring addition

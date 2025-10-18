@@ -6,16 +6,16 @@ public class SokoBanBoard {
     public final int width;
     public final int height;
     private final char[][] map;
-    private final Set<Coords> wallSet;
-    private final Set<Coords> goalSet; // Used for
+    private final HashSet<Coords> wallSet;
+    private final HashSet<Coords> goalSet;
 
     public SokoBanBoard(int width, int height, char[][] map) {
         this.width = width;
         this.height = height;
         this.map = map;
 
-        this.goalSet = new HashSet<>();
-        this.wallSet = new HashSet<>();
+        this.goalSet = new HashSet<Coords>();
+        this.wallSet = new HashSet<Coords>();
         for (int i = 0; i < height; i++) { // Rows
             for (int j = 0; j < width; j++) { // Columns
                 if(map[i][j] == '.') {
@@ -32,11 +32,11 @@ public class SokoBanBoard {
         return map;
     }
 
-    public Set<Coords> getWallSet() {
+    public HashSet<Coords> getWallSet() {
         return wallSet;
     }
 
-    public Set<Coords> getGoalSet() {
+    public HashSet<Coords> getGoalSet() {
         return goalSet;
     }
 

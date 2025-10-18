@@ -5,7 +5,7 @@ public class Heuristic {
 
 	}
 
-	public int calculateHeuristic() {
+	public int calculateHeuristic(State state) {
 		// manhattan distances?
 		
 		return -1;
