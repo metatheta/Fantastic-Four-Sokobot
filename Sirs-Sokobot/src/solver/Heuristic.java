@@ -12,13 +12,31 @@ public class Heuristic {
 	}
 
 	public int calculateHeuristic(State state) {
-		if (!values.containsKey(state)) {
+		if (values.containsKey(state)) {
 			return values.get(state);
 		}
 
-		// calculate manhattan distances?
-		
 		int value = 0;
+
+		for (Coords goalCoords : board.getGoalSet()) {
+			// Compare to positions of other boxes
+
+			int minimumDistance = 99999;
+
+			for (Coords boxCoords : state.boxes) {
+				// Compute Manhattan distance
+				
+				int distance = 
+					(int)Math.abs(goalCoords.col - boxCoords.col)
+					+ (int)Math.abs(goalCoords.row - boxCoords.row);
+				
+				if (distance < minimumDistance) {
+					minimumDistance = distance;
+				}
+			}
+
+			value += minimumDistance;
+		}
 
 		values.put(state, value);
 		return value;
