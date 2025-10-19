@@ -4,41 +4,48 @@ import java.util.HashMap;
 
 public class Heuristic {
 	public final SokoBanBoard board;
-	private HashMap<State, Integer> values;
+	private HashMap<Integer, Integer> stateValues;
+	private HashMap<Integer, Integer> boxValues;
 	
 	public Heuristic(SokoBanBoard board) {
 		this.board = board;
-		this.values = new HashMap<State, Integer>(); 
+		this.stateValues = new HashMap<Integer, Integer>(); 
+		this.boxValues = new HashMap<Integer, Integer>(); 
 	}
 
 	public int calculateHeuristic(State state) {
-		if (values.containsKey(state)) {
-			return values.get(state);
+		if (stateValues.containsKey(state.hashCode())) {
+			return stateValues.get(state.hashCode());
 		}
 
 		int value = 0;
 
-		for (Coords goalCoords : board.getGoalSet()) {
+		for (Coords box : state.boxes) {
 			// Compare to positions of other boxes
 
 			int minimumDistance = 99999;
 
-			for (Coords boxCoords : state.boxes) {
-				// Compute Manhattan distance
-				
-				int distance = 
-					(int)Math.abs(goalCoords.col - boxCoords.col)
-					+ (int)Math.abs(goalCoords.row - boxCoords.row);
-				
-				if (distance < minimumDistance) {
-					minimumDistance = distance;
+			if (boxValues.containsKey(box.hashCode())) {
+				minimumDistance = boxValues.get(box.hashCode());
+			} else {
+				for (Coords goal : board.getGoalSet()) {
+					// Compute Manhattan distance
+					
+					int distance = 
+						(int)Math.abs(goal.col - box.col)
+						+ (int)Math.abs(goal.row - box.row);
+					
+					if (distance < minimumDistance) {
+						minimumDistance = distance;
+					}
 				}
+				boxValues.put(box.hashCode(), minimumDistance);
 			}
 
 			value += minimumDistance;
 		}
 
-		values.put(state, value);
+		stateValues.put(state.hashCode(), value);
 		return value;
 	}
 }

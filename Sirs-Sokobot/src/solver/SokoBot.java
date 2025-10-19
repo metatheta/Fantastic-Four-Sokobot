@@ -21,15 +21,11 @@ public class SokoBot {
 		);
 
 		PriorityQueue<Node> frontier = new PriorityQueue<Node>(new NodeComparator());
-		HashSet<State> frontierStates = new HashSet<State>();
 		HashSet<Node> explored = new HashSet<Node>();
-
         frontier.add(initialNode);
-		frontierStates.add(initialState);
 
         while (!frontier.isEmpty()) {
             Node currentNode = frontier.poll();
-			frontierStates.remove(currentNode.state);
             explored.add(currentNode);
 
 			// If the state is actually the goal state
@@ -55,7 +51,7 @@ public class SokoBot {
 
 				// If the state was already explored
 				// If the state already exists in the frontier
-                if (explored.contains(newNode) || frontierStates.contains(newState)) {
+                if (explored.contains(newNode)) {
                     continue;
                 }
 
@@ -65,7 +61,6 @@ public class SokoBot {
                 	continue;
 
                 frontier.add(newNode);
-				frontierStates.add(newState);
             }
         }
 

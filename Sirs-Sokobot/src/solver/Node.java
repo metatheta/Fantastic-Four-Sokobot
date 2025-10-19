@@ -16,15 +16,6 @@ public class Node {
 		this.heuristicValue = heuristic.calculateHeuristic(state);
     }
 
-    // public boolean wentBack(State childState)
-    // {
-    //     if (parent == null)
-    //         return false;
-
-    //     State p = parent.state;
-    //     return p.equals(childState);
-    // }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
