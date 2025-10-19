@@ -3,14 +3,19 @@ package solver;
 import java.util.Objects;
 
 public class Coords {
-    public final int row;
-    public final int col;
+    public int row;
+    public int col;
 
     public Coords(int row, int col)
     {
         this.row = row;
         this.col = col;
     }
+
+	@Override
+	public Coords clone() {
+		return new Coords(this.row, this.col);
+	}
 
 	@Override
 	public boolean equals(Object o) {
