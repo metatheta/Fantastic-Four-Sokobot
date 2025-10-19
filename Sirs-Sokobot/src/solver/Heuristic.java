@@ -14,9 +14,8 @@ public class Heuristic {
 	}
 
 	public int calculateHeuristic(State state) {
-		if (stateValues.containsKey(state.hashCode())) {
+		if (stateValues.containsKey(state.hashCode()))
 			return stateValues.get(state.hashCode());
-		}
 
 		int value = 0;
 
@@ -28,7 +27,7 @@ public class Heuristic {
 			if (boxValues.containsKey(box.hashCode())) {
 				minimumDistance = boxValues.get(box.hashCode());
 			} else {
-				for (Coords goal : board.getGoalSet()) {
+				for (Coords goal : board.goals) {
 					// Compute Manhattan distance
 					
 					int distance = 

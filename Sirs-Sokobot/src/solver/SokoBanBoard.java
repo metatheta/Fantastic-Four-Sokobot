@@ -1,50 +1,22 @@
 package solver;
 
-import java.util.*;
+import java.util.HashSet;
 
 public class SokoBanBoard {
-    public final int width;
-    public final int height;
-    private final char[][] map;
-    private final HashSet<Coords> wallSet;
-    private final HashSet<Coords> goalSet;
+    public final HashSet<Coords> walls;
+    public final HashSet<Coords> goals;
 
-    public SokoBanBoard(int width, int height, char[][] map) {
-        this.width = width;
-        this.height = height;
-        this.map = map;
+    public SokoBanBoard(char[][] mapData) {
+        this.walls = new HashSet<Coords>();
+		this.goals = new HashSet<Coords>();
+        for (int row = 0; row < mapData.length; row++) {
+            for (int col = 0; col < mapData[row].length; col++) {
+                if (mapData[row][col] == '#')
+                    this.walls.add(new Coords(row, col));
 
-        this.goalSet = new HashSet<Coords>();
-        this.wallSet = new HashSet<Coords>();
-        for (int i = 0; i < height; i++) { // Rows
-            for (int j = 0; j < width; j++) { // Columns
-                if(map[i][j] == '.') {
-                    this.goalSet.add(new Coords(i, j));
-                }
-                if(map[i][j] == '#') {
-                    this.wallSet.add(new Coords(i, j));
-                }
+				if (mapData[row][col] == '.')
+                    this.goals.add(new Coords(row, col));
             }
         }
-    }
-
-    public char[][] getMap() {
-        return map;
-    }
-
-    public HashSet<Coords> getWallSet() {
-        return wallSet;
-    }
-
-    public HashSet<Coords> getGoalSet() {
-        return goalSet;
-    }
-
-    public boolean isWall(Coords c) {
-        return wallSet.contains(c);
-    }
-
-    public boolean isGoalCell(Coords c) {
-        return goalSet.contains(c);
     }
 }

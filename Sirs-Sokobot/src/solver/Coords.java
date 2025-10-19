@@ -19,17 +19,15 @@ public class Coords {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o.getClass() != this.getClass()) {
+		if (!(o instanceof Coords c)) {
 			return false;
 		}
 
-		Coords c = (Coords)o;
 		return c.row == this.row && c.col == this.col;
 	}
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         // return 31 * row + col;
 		return Objects.hash(this.row, this.col);
     }

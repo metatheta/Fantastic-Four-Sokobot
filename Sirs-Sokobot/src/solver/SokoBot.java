@@ -7,7 +7,7 @@ import java.util.PriorityQueue;
 public class SokoBot {
     public String solveSokobanPuzzle(int width, int height, char[][] mapData, char[][] itemsData) {
         // Initialize board
-		SokoBanBoard board = new SokoBanBoard(width, height, mapData);
+		SokoBanBoard board = new SokoBanBoard(mapData);
 		Heuristic heuristic = new Heuristic(board);
 		NodeGenerator nodeGenerator = new NodeGenerator(board);
 		Squarelock squarelock = new Squarelock(mapData);
@@ -26,26 +26,21 @@ public class SokoBot {
             Node currentNode = frontier.poll();
 
 			// If the state is actually the goal state
-			if (currentNode.state.isGoal(board)) {
-				// Generate string of moves
+			if (isGoalState(currentNode.state, board)) {
 				StringBuilder sb = new StringBuilder();
-				for (Node n = currentNode; n.parent != null; n = n.parent) {
+				for (Node n = currentNode; n.parent != null; n = n.parent)
 					sb.append(n.move);
-				}
 
 				return sb.reverse().toString();
 			}
 
 			ArrayList<Node> nodes = nodeGenerator.generateNodes(currentNode, heuristic);
 			for (Node node : nodes) {
-				if (explored.contains(node.state)) {
+				if (explored.contains(node.state))
 					continue;
-				}
 
-				if (node.state.isDeadlock(board.getGoalSet(), board.getWallSet(),
-					squarelock.getSquarelockSet())) {
+				if (node.state.isDeadlock(board, squarelock.getSquarelockSet()))
 					continue;
-				}
 
 				frontier.add(node);
 			}
@@ -58,16 +53,24 @@ public class SokoBot {
         return "";
     }
 
-	State generateInitialState(SokoBanBoard board, char[][] itemsData) {
-		HashSet<Coords> boxes = new HashSet<>();
-        Coords player = null;
-        for (int i = 0; i < board.height; i++) {
-            for (int j = 0; j < itemsData[i].length; j++) {
-                if (itemsData[i][j] == '@') player = new Coords(i, j);
-                if (itemsData[i][j] == '$') boxes.add(new Coords(i, j));
+	private State generateInitialState(SokoBanBoard board, char[][] itemsData) {
+		Coords player = null;
+		HashSet<Coords> boxes = new HashSet<Coords>();
+        
+        for (int row = 0; row < itemsData.length; row++) {
+            for (int col = 0; col < itemsData[row].length; col++) {
+                if (itemsData[row][col] == '@')
+					player = new Coords(row, col);
+
+                if (itemsData[row][col] == '$')
+					boxes.add(new Coords(row, col));
             }
         }
 		
 		return new State(player, boxes);
+	}
+
+	private boolean isGoalState(State state, SokoBanBoard board) {
+		return state.boxes.equals(board.goals); 
 	}
 }

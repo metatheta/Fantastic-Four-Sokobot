@@ -42,7 +42,7 @@ public class NodeGenerator {
 	}
 
 	private boolean isActionValid(State state, Coords target, char action) {
-		if (board.getWallSet().contains(target)) {
+		if (board.walls.contains(target)) {
 			return false;
 		}
 
@@ -50,10 +50,7 @@ public class NodeGenerator {
 			Coords pushTarget = target.clone();
 			applyMove(pushTarget, action);
 
-			// if (board.getWallSet().contains(pushTarget)
-			// 	|| state.boxes.contains(pushTarget)
-			// 	|| board.deadlocks.contains(pushTarget)) {
-			if (board.getWallSet().contains(pushTarget)
+			if (board.walls.contains(pushTarget)
 				|| state.boxes.contains(pushTarget)) {
 				return false;
 			} else {
