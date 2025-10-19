@@ -87,7 +87,7 @@ public class Squarelock {
                         {
                             if(map[y + 1][i] == ' ')
                             {
-                                this.squarelockSet.add(new Coords(i, y + 1));
+                                this.squarelockSet.add(new Coords(y+1, i));
                             }
                         }
                     }
@@ -152,7 +152,7 @@ public class Squarelock {
                         {
                             if(map[y - 1][i] == ' ')
                             {
-                                this.squarelockSet.add(new Coords(i, y - 1));
+                                this.squarelockSet.add(new Coords(y-1, i));
                             }
                         }
                     }
@@ -189,7 +189,7 @@ public class Squarelock {
             
             for (y = 0; y < innerLoopBound; y++)
             {
-                System.out.println(y);
+                // System.out.println(y);
                 if(isWall(map[y][x]) && isWall(map[y][x + 1]) && startFlagValid())
                 {
                     endFlag = y;
@@ -224,7 +224,7 @@ public class Squarelock {
                         {
                             if(map[i][x + 1] == ' ')
                             {
-                                this.squarelockSet.add(new Coords(x + 1, i));
+                                this.squarelockSet.add(new Coords(i, x+1));
                             }
                         }
                     }
@@ -260,7 +260,7 @@ public class Squarelock {
             
             for (y = 0; y < innerLoopBound; y++)
             {
-                System.out.println(y);
+                // System.out.println(y);
                 if(isWall(map[y][x]) && isWall(map[y][x - 1]) && startFlagValid())
                 {
                     endFlag = y;
@@ -295,7 +295,7 @@ public class Squarelock {
                         {
                             if(map[i][x - 1] == ' ')
                             {
-                                this.squarelockSet.add(new Coords(x - 1, i));
+                                this.squarelockSet.add(new Coords(i, x-1));
                             }
                         }
                     }
@@ -353,10 +353,15 @@ public class Squarelock {
     {
         StringBuilder sb = new StringBuilder();
 
-        for (char[] row : map) 
+        for (int row = 0; row < map.length; row++) 
         {
-            sb.append(row);  // appends the whole char[] as a String
-            sb.append('\n'); // new line after each row
+            for (int col = 0; col < map[i].length; col++) {
+				if (squarelockSet.contains(new Coords(row, col)))
+					sb.append('X');
+				else
+					sb.append(map[row][col]);
+			}
+            sb.append('\n');
         }
 
         return sb.toString();

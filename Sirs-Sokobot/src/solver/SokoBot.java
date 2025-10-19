@@ -7,6 +7,9 @@ public class SokoBot {
         // Initialize board and heuristic
 		SokoBanBoard board = new SokoBanBoard(width, height, mapData);
 		Heuristic heuristic = new Heuristic(board);
+		Squarelock squarelock = new Squarelock(mapData);
+		squarelock.squarelockCheck();
+		// System.out.println(squarelock.toString());
 
         // Generate initial state and nodes
 		State initialState = generateInitialState(board, itemsData);
@@ -50,12 +53,13 @@ public class SokoBot {
                 }
 
                 // If the state results in a deadlock for a box
-                if (newState.isCornerDeadlock(board.getGoalSet(), board.getWallSet()))
+                if (newState.isDeadlock(board.getGoalSet(), board.getWallSet(),
+					squarelock.getSquarelockSet()))
                 	continue;
 
 				// If the state results in a backtrack
-                if (newNode.wentBack(newState))
-                	continue;
+                // if (newNode.wentBack(newState))
+                // 	continue;
 
                 // If the state is actually the goal state
                 if (newState.isGoal(board)) {

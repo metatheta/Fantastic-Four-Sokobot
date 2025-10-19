@@ -11,7 +11,7 @@ public class State {
         this.boxes = new HashSet<>(boxes);
     }
 
-    public boolean isCornerDeadlock(HashSet<Coords> goals, HashSet<Coords> walls)
+    public boolean isDeadlock(HashSet<Coords> goals, HashSet<Coords> walls, HashSet<Coords> wawa)
     {
         int row;
         int col;
@@ -24,6 +24,9 @@ public class State {
             //if box is in goal
             if (isIn(goals, row, col)) 
                 continue;
+
+			if (wawa.contains(box))
+				return true;
             
             // check if its in a corner
             if (isIn(walls, row - 1, col) && isIn(walls, row, col - 1)) 
