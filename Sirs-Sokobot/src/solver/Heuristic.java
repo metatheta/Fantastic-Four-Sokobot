@@ -19,14 +19,9 @@ public class Heuristic {
 
         //Compute heuristic value
 		int value = 0;
-        value += manhattanBoxGoal(state);
-
-        /*
-        if (false && state.pushState) {
-            value += manhattanBoxGoal(state) - state.goalCount; //smarter but slower
-        } else if (false) {
-            value += manhattanPlayerBox(state); //faster but dumber
-        }*/
+        value += distancePlayerBox(state); //Search closest box + manhattan distance to a goal state
+        if (state.pushState)
+            value += manhattanBoxGoal(state); //When pushing the box compute total manhattan distance
 
 		stateValues.put(state.hashCode(), value);
 		return value;
@@ -67,12 +62,26 @@ public class Heuristic {
 
     private int distancePlayerBox(State state) {
         int value = 0;
+        int manhattan = 0;
+        Boolean isGoal = false;
 
         //Gets the manhattan distance of player to closest box
         for (Coords box : state.boxes) {
             // Compare to positions of other boxes
 
             int minimumDistance = 99999;
+
+            for (Coords goal : board.goals) {
+                if (box.row == goal.row && box.col == goal.col) {
+                    isGoal = true;
+                    break;
+                } else
+                    manhattan = (int)Math.abs(goal.col - box.col)
+                            + (int)Math.abs(goal.row - box.row);
+            }
+
+            if (isGoal)
+                continue;
 
             if (boxValues.containsKey(box.hashCode())) {
                 minimumDistance = boxValues.get(box.hashCode());
@@ -86,11 +95,12 @@ public class Heuristic {
                     minimumDistance = distance;
                 }
             }
+            //value += minimumDistance;
 
             if (minimumDistance < value || value == 0)
-                value = minimumDistance;
+                value += minimumDistance;
         }
 
-        return value;
+        return value + manhattan;
     }
 }
