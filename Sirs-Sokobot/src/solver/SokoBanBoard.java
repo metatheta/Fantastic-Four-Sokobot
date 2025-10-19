@@ -47,6 +47,4 @@ public class SokoBanBoard {
     public boolean isGoalCell(Coords c) {
         return goalSet.contains(c);
     }
-
-
 }

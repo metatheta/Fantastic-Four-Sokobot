@@ -9,13 +9,9 @@ public class SokoBot {
 		Heuristic heuristic = new Heuristic(board);
 		Squarelock squarelock = new Squarelock(mapData);
 		squarelock.squarelockCheck();
-		// System.out.println(squarelock.toString());
 
         // Generate initial state and nodes
 		State initialState = generateInitialState(board, itemsData);
-		if (initialState.isGoal(board)) {
-			return "";
-		}
 		Node initialNode = new Node(initialState, null, "", heuristic);
 
 		// Generate state generator
@@ -35,6 +31,17 @@ public class SokoBot {
             Node currentNode = frontier.poll();
 			frontierStates.remove(currentNode.state);
             explored.add(currentNode);
+
+			// If the state is actually the goal state
+			if (currentNode.state.isGoal(board)) {
+				// Generate string of moves
+				StringBuilder sb = new StringBuilder();
+				for (Node n = currentNode; n.parent != null; n = n.parent) {
+					sb.append(n.move);
+				}
+
+				return sb.reverse().toString();
+			}
 
             List<String> actions = generator.generateActions(currentNode.state);
 			for (String action : actions) {
@@ -56,21 +63,6 @@ public class SokoBot {
                 if (newState.isDeadlock(board.getGoalSet(), board.getWallSet(),
 					squarelock.getSquarelockSet()))
                 	continue;
-
-				// If the state results in a backtrack
-                // if (newNode.wentBack(newState))
-                // 	continue;
-
-                // If the state is actually the goal state
-                if (newState.isGoal(board)) {
-                    // Generate string of moves
-					StringBuilder sb = new StringBuilder();
-                    for (Node n = newNode; n.parent != null; n = n.parent) {
-						sb.append(n.move);
-					}
-
-                    return sb.reverse().toString();
-                }
 
                 frontier.add(newNode);
 				frontierStates.add(newState);

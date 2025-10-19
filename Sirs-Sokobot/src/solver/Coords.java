@@ -1,7 +1,8 @@
 package solver;
 
-public class Coords implements Comparable<Coords>{
+import java.util.Objects;
 
+public class Coords {
     public final int row;
     public final int col;
 
@@ -11,33 +12,20 @@ public class Coords implements Comparable<Coords>{
         this.col = col;
     }
 
-    @Override
-    public boolean equals(Object o)
-    {
-        if (o == null)
-            return false;
-        if (o == this)
-            return true;
-        if (this.getClass() != o.getClass())
-            return false;
-        Coords c = (Coords) o;
-        if(this.hashCode() == c.hashCode())
-            return true;
-        return c.row == row && c.col == col;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (o.getClass() != this.getClass()) {
+			return false;
+		}
 
-     @Override
-    public int compareTo(Coords other)
-    {
-        if (this.row != other.row)
-            return this.row - other.row;
-        return this.col - other.col;
-    }
+		Coords c = (Coords)o;
+		return c.row == this.row && c.col == this.col;
+	}
 
     @Override
     public int hashCode()
     {
-        return 31 * row + col;
+        // return 31 * row + col;
+		return Objects.hash(this.row, this.col);
     }
-
 }
