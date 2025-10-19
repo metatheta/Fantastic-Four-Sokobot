@@ -19,6 +19,7 @@ public class Squarelock {
     {
         map = m;
         goalFlag = false;
+        squarelockSet = new HashSet<>();
         x = 0;
         y = 0;
     }
