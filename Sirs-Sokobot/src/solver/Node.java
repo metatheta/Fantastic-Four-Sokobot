@@ -9,7 +9,7 @@ public class Node {
 	public final int heuristicValue;
 
     public Node(State state, Node parent, String move, Heuristic heuristic) {
-        this.state = state;
+        this.state = state; //contains the state
         this.parent = parent;
         this.move = move;
 		this.heuristicValue = heuristic.calculateHeuristic(state);

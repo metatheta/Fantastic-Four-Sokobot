@@ -31,6 +31,8 @@ public class SokoBot {
 				for (Node n = currentNode; n.parent != null; n = n.parent)
 					sb.append(n.move);
 
+                System.out.println("Generated states: " + State.state_count);
+                System.out.println("Total moves: " + sb.length());
 				return sb.reverse().toString();
 			}
 
@@ -49,7 +51,7 @@ public class SokoBot {
         }
 
 		// Otherwise, give up ;(
-		System.out.println("fuck");
+		System.out.println("frick");
         return "";
     }
 
@@ -66,8 +68,8 @@ public class SokoBot {
 					boxes.add(new Coords(row, col));
             }
         }
-		
-		return new State(player, boxes);
+
+		return new State(null, player, boxes, 0, false);
 	}
 
 	private boolean isGoalState(State state, SokoBanBoard board) {

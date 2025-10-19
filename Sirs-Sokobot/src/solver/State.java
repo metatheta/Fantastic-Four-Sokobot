@@ -4,12 +4,23 @@ import java.util.HashSet;
 import java.util.Objects;
 
 public class State {
+    public static int state_count = 0;
+
     public final Coords player;
     public final HashSet<Coords> boxes;
 
-    public State(Coords player, HashSet<Coords> boxes) {
+    //TODO: LOTS OF THESE ARE NOW COMPLETELY USELESS
+    public final int goalCount;
+    public final Boolean pushState;
+    public final State previousState;
+
+    public State(State prev, Coords player, HashSet<Coords> boxes, int goalCount, Boolean pushState) {
+        this.previousState = prev;
         this.player = player;
         this.boxes = new HashSet<>(boxes);
+        this.goalCount = goalCount;
+        this.pushState = pushState;
+        State.state_count += 1;
     }
 
     public boolean isDeadlock(SokoBanBoard board, HashSet<Coords> squarelocks)
@@ -52,11 +63,15 @@ public class State {
 
     @Override
     public boolean equals(Object o) {
+        //data type checking
         if (!(o instanceof State s))
             return false;
-		
-		return Objects.equals(this.player, s.player)
-        	&& Objects.equals(this.boxes, s.boxes);
+
+        //checks equality for state
+		/*return Objects.equals(this.player, s.player)
+        	&& Objects.equals(this.boxes, s.boxes);*/
+        return Objects.equals(this.boxes, s.boxes) && Objects.equals(this.player, s.player)
+                && Objects.equals(this.goalCount, s.goalCount);
     }
 
     @Override

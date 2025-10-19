@@ -25,7 +25,8 @@ public class NodeGenerator {
 
 	private ArrayList<Character> generateActions(State state) {
 		ArrayList<Character> actions = new ArrayList<Character>();
-		Coords target = state.player.clone();
+		//Coords target = state.player.clone();
+        Coords target = state.player.clone();
 
 		char[] choices = {'u', 'r', 'l', 'd'};
 		for (char choice : choices) {
@@ -42,6 +43,7 @@ public class NodeGenerator {
 	}
 
 	private boolean isActionValid(State state, Coords target, char action) {
+        //Wall collision
 		if (board.walls.contains(target)) {
 			return false;
 		}
@@ -50,12 +52,9 @@ public class NodeGenerator {
 			Coords pushTarget = target.clone();
 			applyMove(pushTarget, action);
 
-			if (board.walls.contains(pushTarget)
-				|| state.boxes.contains(pushTarget)) {
-				return false;
-			} else {
-				return true;
-			}
+
+            return !board.walls.contains(pushTarget)
+                    && !state.boxes.contains(pushTarget);
 		}
 		
 		return true;
@@ -76,6 +75,7 @@ public class NodeGenerator {
 
 	private State generateState(State state, char action) {
 		// Move player
+        Boolean isPush = false;
 		Coords player = state.player.clone();
 		applyMove(player, action);
 
@@ -86,8 +86,18 @@ public class NodeGenerator {
 			Coords newBox = player.clone();
 			applyMove(newBox, action);
 			boxes.add(newBox);
+            isPush = true;
 		}
-		
-		return new State(player, boxes);
+		return new State(state, player, boxes, getGoalCount(state.boxes), isPush);
 	}
+
+    //TODO: this
+    private int getGoalCount(HashSet<Coords> boxes) {
+        int count = 0;
+        for (Coords b: boxes)
+            for (Coords g: board.goals)
+                if (b.row == g.row && b.col == g.col)
+                    count += 1;
+        return count;
+    }
 }

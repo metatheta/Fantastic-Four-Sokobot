@@ -3,6 +3,7 @@ package solver;
 import java.util.Comparator;
 
 public class NodeComparator implements Comparator<Node> {
+    //Heuristic comparison
 	public int compare(Node node1, Node node2) {
 		if (node1.heuristicValue < node2.heuristicValue) {
 			return 1;
