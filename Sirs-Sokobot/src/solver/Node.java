@@ -5,14 +5,12 @@ import java.util.Objects;
 public class Node {
     public final State state;
 	public final Node parent;
-    public final String move;
-	public final int heuristicValue;
+	public final int heuristic;
 
-    public Node(State state, Node parent, String move, Heuristic heuristic) {
-        this.state = state; //contains the state
+    public Node(State state, Node parent, Heuristic heuristic) {
+        this.state = state;
         this.parent = parent;
-        this.move = move;
-		this.heuristicValue = heuristic.calculateHeuristic(state);
+		this.heuristic = heuristic.calculateHeuristic(state);
     }
 
     @Override

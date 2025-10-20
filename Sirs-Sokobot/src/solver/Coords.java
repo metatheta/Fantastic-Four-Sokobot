@@ -31,4 +31,9 @@ public class Coords {
         // return 31 * row + col;
 		return Objects.hash(this.row, this.col);
     }
+
+	@Override
+	public String toString() {
+		return "(" + row + ", " + col + ")";
+	}
 }

@@ -15,7 +15,7 @@ public class SokoBot {
 
         // Generate initial state and node
 		State initialState = generateInitialState(board, itemsData);
-		Node initialNode = new Node(initialState, null, "", heuristic);
+		Node initialNode = new Node(initialState, null, heuristic);
 
 		// Initialize frontier and explored set
 		PriorityQueue<Node> frontier = new PriorityQueue<Node>(new NodeComparator());
@@ -24,34 +24,26 @@ public class SokoBot {
 
         while (!frontier.isEmpty()) {
             Node currentNode = frontier.poll();
+			explored.add(currentNode.state);
 
-			// If the state is actually the goal state
 			if (isGoalState(currentNode.state, board)) {
-				StringBuilder sb = new StringBuilder();
-				for (Node n = currentNode; n.parent != null; n = n.parent)
-					sb.append(n.move);
-
-                System.out.println("Generated states: " + State.state_count);
-                System.out.println("Total moves: " + sb.length());
-				return sb.reverse().toString();
+				return generatePath(currentNode);
 			}
 
-			ArrayList<Node> nodes = nodeGenerator.generateNodes(currentNode, heuristic);
+			ArrayList<Node> nodes = nodeGenerator.generateNodes(currentNode, board, heuristic);
 			for (Node node : nodes) {
 				if (explored.contains(node.state))
 					continue;
-
+					
 				if (node.state.isDeadlock(board, squarelock.getSquarelockSet()))
 					continue;
-
+				
 				frontier.add(node);
 			}
-
-			explored.add(currentNode.state);
         }
 
 		// Otherwise, give up ;(
-		System.out.println("frick");
+		System.out.println("SHIT");
         return "";
     }
 
@@ -69,7 +61,24 @@ public class SokoBot {
             }
         }
 
-		return new State(null, player, boxes, 0, false);
+		return new State(player, boxes);
+	}
+
+	private String generatePath(Node start) {
+		StringBuilder sb = new StringBuilder();
+		int totalCost = 0;
+
+		for (Node n = start; n.parent != null; n = n.parent) {
+			// Do some wacko shit here
+			
+			// sb.append(n.lastAction);
+			sb.append('d');
+		}
+
+		String result = sb.reverse().toString();
+		System.out.println(result);
+		System.out.printf("Total cost: %d\n", totalCost);
+		return result;
 	}
 
 	private boolean isGoalState(State state, SokoBanBoard board) {
