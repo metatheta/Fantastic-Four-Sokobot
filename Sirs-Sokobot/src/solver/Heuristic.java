@@ -50,8 +50,7 @@ public class Heuristic {
                     if (distance < minimumDistance) {
                         minimumDistance = distance;
                     }
-                    if (minimumDistance == 0)
-                        minimumDistance = 1;
+
                 }
                 boxValues.put(box.hashCode(), minimumDistance);
             }
