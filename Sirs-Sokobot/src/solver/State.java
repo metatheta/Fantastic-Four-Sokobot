@@ -62,4 +62,9 @@ public class State {
     public int hashCode() {
         return Objects.hash(boxes);
     }
+
+	@Override
+	public String toString() {
+		return "Player: " + player.toString() + ", " + "Boxes: " + boxes.toString();
+	}
 }

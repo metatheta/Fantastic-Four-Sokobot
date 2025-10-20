@@ -3,6 +3,7 @@ package solver;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.HashMap;
 
 /***********************************
  *                                 *
@@ -37,25 +38,39 @@ public class NodeGenerator {
 		*/
 		
 		ArrayList<Node> nodes = new ArrayList<Node>();
-
-		// Search playerSearch = search(node.state, board);
-		// ArrayList<State> states = generateStates(node.state, playerSearch);
-		// for (State state : states) {
-		// 	Node newNode = new Node(state, node, heuristic);
-		// 	nodes.add(newNode);
-		// }
-
-		System.out.println(floodFill(node.state, board).toString());
-		// Search search = floodFill(node.state, board);
-		// ArrayList<State> states = generateStates(node.state, search);
 		
+		// Look for all boxes available to the player, as well as
+		// the spaces where these boxes COULD be pushed
+		ArrayList<SearchedBox> search = floodFill(node.state, board);
+
+		// Generate the possible states from all of the given
+		// spaces for pushing
+		ArrayList<State> states = generateStates(node.state, search);
+		// System.out.println(states);
+		
+		// Generate the nodes associated with these states
+		for (State state : states) {
+			Node newNode = new Node(state, node, heuristic);
+			nodes.add(newNode);
+		}
+
 		return nodes;
 	}
 
-	private Search floodFill(State state, SokoBanBoard board) {
-		HashSet<Coords> boxSpaces = new HashSet<>();
+	/**
+	 * This function performs a flood-filling search to find
+	 * all boxes available to the player, as well as the spaces
+	 * next to those boxes where a push MAY be possible.
+	 * 
+	 * @param state Current state
+	 * @param board Board and its static attributes
+	 * @return List of SearchedBox objects
+	 */
+	private ArrayList<SearchedBox> floodFill(State state, SokoBanBoard board) {
+		ArrayList<SearchedBox> searchedBoxes = new ArrayList<>();
 		HashSet<Coords> boxes = new HashSet<>();
 		
+		// Initialize simple breadth-first search
 		ArrayDeque<Coords> frontier = new ArrayDeque<>();
 		HashSet<Coords> explored = new HashSet<>();
 		frontier.add(state.player);
@@ -84,15 +99,97 @@ public class NodeGenerator {
 			}
 		}
 
+		// For each found box, check if any of the spaces
+		// surrounding each box along the cardinal directions
+		// were found in the breadth-first search earlier;
+		// if they were, consider them a "box space" where a
+		// push COULD be performed
 		for (Coords box : boxes) {
+			HashMap<Coords, Character> boxSpaces = new HashMap<>();
 			for (char dir : dirs) {
 				Coords ne = applyMove(box, dir);
 				if (explored.contains(ne))
-					boxSpaces.add(ne);
+					boxSpaces.put(ne, invertDirection(dir));
 			}
+			SearchedBox newSearchedBox = new SearchedBox(box, boxSpaces);
+			searchedBoxes.add(newSearchedBox);
 		}
 
-		return new Search(boxSpaces, boxes);
+		return searchedBoxes;
+	}
+
+	/**
+	 * This function generates the possible states from the earlier-found
+	 * boxes and their possible pushes.
+	 * 
+	 * @param state Current state
+	 * @param searchedBoxes Available boxes and push spaces
+	 * @return List of states
+	 */
+	private ArrayList<State> generateStates(State state, ArrayList<SearchedBox> searchedBoxes) {
+		ArrayList<State> states = new ArrayList<State>();
+		for (SearchedBox searchedBox : searchedBoxes) {
+			for (Coords boxSpace : searchedBox.spaces.keySet()) {
+				// Check if box can even be pushed from space
+				if (!isActionValid(state.boxes, searchedBox.box, searchedBox.spaces.get(boxSpace))) {
+					continue;
+				}
+				
+				State newState = generateState(boxSpace, state.boxes, searchedBox.spaces.get(boxSpace));
+				states.add(newState);
+			}
+		}
+		return states;
+	}
+
+	/**
+	 * This function generates the state.
+	 * 
+	 * Okay it looks esoteric and weird asf but look at it like this: we pass in
+	 * where the player would be BEFORE making the action, alongside the
+	 * boxes and the actual action. THEN it applies the action. You'll see
+	 * 
+	 * @param player Position of player before action
+	 * @param boxes Positions of boxes
+	 * @param action Action to be performed
+	 * @return Brand new state
+	 */
+	private State generateState(Coords player, HashSet<Coords> boxes, char action) {
+		// Apply action to player
+		Coords newPlayer = applyMove(player.clone(), action);
+		// System.out.printf("OLD: %s\nNEW: %s\n", player, newPlayer);
+		
+		HashSet<Coords> newBoxes = new HashSet<Coords>(boxes);
+		// If any of the boxes gets moved as a result
+		// of the previous action being applied...
+		if (newBoxes.contains(newPlayer)) {
+			// Move the box!
+			// At this point it is assumed that the movement
+			// is always legal as it was vetted earlier
+			// (...........Unless its wrong)
+			newBoxes.remove(newPlayer);
+			Coords newBox = applyMove(newPlayer.clone(), action);
+			newBoxes.add(newBox);
+		}
+		
+		return new State(newPlayer, newBoxes);
+	}
+
+	private boolean isActionValid(HashSet<Coords> boxes, Coords from, char action) {
+		Coords target = applyMove(from, action);
+		
+		if (board.walls.contains(target)) {
+			return false;
+		}
+
+		if (boxes.contains(target)) {
+			Coords pushTarget = applyMove(target, action);
+
+            return !board.walls.contains(pushTarget)
+                    && !boxes.contains(pushTarget);
+		}
+		
+		return true;
 	}
 
 	private Coords applyMove(Coords start, char action) {
@@ -111,117 +208,13 @@ public class NodeGenerator {
 		return co;
 	}
 
-	// private Search search(State state, SokoBanBoard board) {
-	// 	HashSet<Coords> searched = new HashSet<Coords>();
-	// 	HashSet<Coords> pushableBoxes = new HashSet<Coords>();
-
-	// 	ArrayDeque<Coords> frontier = new ArrayDeque<Coords>();
-	// 	HashSet<Coords> explored = new HashSet<Coords>();
-	// 	frontier.add(state.player);
- 
-	// 	while (!frontier.isEmpty()) {
-	// 		Coords cur = frontier.poll();
-	// 		explored.add(cur);
-
-	// 		Coords[] dirs = {
-	// 			new Coords(cur.row - 1, cur.col), // Up
-	// 			new Coords(cur.row, cur.col + 1), // Right
-	// 			new Coords(cur.row, cur.col - 1), // Left
-	// 			new Coords(cur.row + 1, cur.col)  // Down
-	// 		};
-			
-	// 		for (Coords dir : dirs) {
-	// 			if (!board.walls.contains(dir))
-	// 				if (!state.boxes.contains(dir))
-	// 					frontier.add(dir);
-	// 				else
-	// 					pushableBoxes.add(dir);
-	// 		}
-	// 	}
-		
-	// 	return new Search(searched, pushableBoxes);
-	// }
-
-	// private ArrayList<State> generateStates(State state, Search search) {
-	// 	ArrayList<State> states = new ArrayList<State>();
-	// 	for (Coords box : search.pushableBoxes) {
-	// 		Coords up = box.clone();
-	// 		applyMove(up, 'd');
-	// 		if (search.searched.contains(up)
-	// 			&& isActionValid(state, box, 'd')) {
-	// 			State newState = generateState(state, up, 'd');
-	// 			states.add(newState);
-	// 		}
-			
-	// 		Coords right = box.clone();
-	// 		applyMove(right, 'l');
-	// 		if (search.searched.contains(right)
-	// 			&& isActionValid(state, box, 'l')) {
-	// 			State newState = generateState(state, right, 'l');
-	// 			states.add(newState);
-	// 		}
-
-	// 		Coords left = box.clone();
-	// 		applyMove(left, 'r');
-	// 		if (search.searched.contains(left)
-	// 			&& isActionValid(state, box, 'r')) {
-	// 			State newState = generateState(state, left, 'r');
-	// 			states.add(newState);
-	// 		}
-
-	// 		Coords down = box.clone();
-	// 		applyMove(down, 'u');
-	// 		if (search.searched.contains(down)
-	// 			&& isActionValid(state, box, 'u')) {
-	// 			State newState = generateState(state, down, 'u');
-	// 			states.add(newState);
-	// 		}
-
-	// 	}
-	// 	return states;
-	// }
-
-	// private boolean isActionValid(State state, Coords target, char action) {
-	// 	if (board.walls.contains(target)) {
-	// 		return false;
-	// 	}
-
-	// 	if (state.boxes.contains(target)) {
-	// 		Coords pushTarget = target.clone();
-	// 		applyMove(pushTarget, action);
-
-    //         return !board.walls.contains(pushTarget)
-    //                 && !state.boxes.contains(pushTarget);
-	// 	}
-		
-	// 	return true;
-	// }
-
-	// private void applyMove(Coords coords, char action) {
-	// 	int r = 0, c = 0;
-	// 	switch (action) {
-	// 		case 'u': r = -1; break;
-	// 		case 'r': c = 1; break;
-	// 		case 'l': c = -1; break;
-	// 		case 'd': r = 1; break;
-	// 	}
-
-	// 	coords.row += r;
-	// 	coords.col += c;
-	// }
-
-	// private State generateState(State state, Coords player, char action) {
-	// 	Coords newPlayer = player.clone();
-	// 	applyMove(newPlayer, action);
-		
-	// 	HashSet<Coords> newBoxes = new HashSet<Coords>(state.boxes);
-	// 	if (newBoxes.contains(newPlayer)) {
-	// 		newBoxes.remove(newPlayer);
-	// 		Coords newBox = newPlayer.clone();
-	// 		applyMove(newBox, action);
-	// 		newBoxes.add(newBox);
-	// 	}
-		
-	// 	return new State(newPlayer, newBoxes);
-	// }
+	private char invertDirection(char dir) {
+		switch (dir) {
+			case 'u': return 'd';
+			case 'd': return 'u';
+			case 'l': return 'r';
+			case 'r': return 'l';
+			default: return ' ';
+		}
+	}
 }

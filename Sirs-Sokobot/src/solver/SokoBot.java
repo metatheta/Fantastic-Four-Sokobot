@@ -69,7 +69,7 @@ public class SokoBot {
 		int totalCost = 0;
 
 		for (Node n = start; n.parent != null; n = n.parent) {
-			// Do some wacko shit here
+			// TODO: some wacko shit here
 			
 			// sb.append(n.lastAction);
 			sb.append('d');
