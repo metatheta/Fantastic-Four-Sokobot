@@ -1,9 +1,6 @@
 package solver;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.HashMap;
+import java.util.*;
 
 /***********************************
  *                                 *
@@ -79,7 +76,7 @@ public class NodeGenerator {
 		HashSet<Coords> boxes = new HashSet<>();
 		
 		// Initialize simple breadth-first search
-		ArrayDeque<Coords> frontier = new ArrayDeque<>();
+		PriorityQueue<Coords> frontier = new PriorityQueue<>();
 		HashSet<Coords> explored = new HashSet<>();
 		frontier.add(state.player);
 
@@ -106,12 +103,6 @@ public class NodeGenerator {
 				frontier.add(ne);
 			}
 		}
-
-		// For each found box, check if any of the spaces
-		// surrounding each box along the cardinal directions
-		// were found in the breadth-first search earlier;
-		// if they were, consider them a "box space" where a
-		// push COULD be performed
 		for (Coords box : boxes) {
 			HashMap<Coords, Character> boxSpaces = new HashMap<>();
 			for (char dir : dirs) {
@@ -149,18 +140,13 @@ public class NodeGenerator {
 				
 				if (state.boxes.contains(boxSpace))
 					continue;
-				
-				// Check if box can even be pushed from space
+
 				if (!isActionValid(state.boxes, searchedBox.box, searchedBox.spaces.get(boxSpace))) {
 					continue;
 				}
 				
 				State newState = generateState(boxSpace, state.boxes, searchedBox.spaces.get(boxSpace));
 				states.add(newState);
-				// if (!state.boxes.equals(newState.boxes))
-				// 	states.add(newState);
-				// if (!state.boxes.equals(newState.boxes))
-				// 	states.add(newState);
 			}
 		}
 		return states;

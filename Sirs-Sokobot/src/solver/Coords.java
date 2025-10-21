@@ -1,6 +1,6 @@
 package solver;
 
-public class Coords {
+public class Coords implements Comparable<Coords> {
     public int row;
     public int col;
 
@@ -24,7 +24,15 @@ public class Coords {
 		return c.row == this.row && c.col == this.col;
 	}
 
-    @Override
+	@Override
+	public int compareTo(Coords other)
+	{
+		if (this.row != other.row)
+			return this.row - other.row;
+		return this.col - other.col;
+	}
+
+	@Override
     public int hashCode() {
         return 31 * row + col;
 		// return Objects.hash(this.row, this.col);
