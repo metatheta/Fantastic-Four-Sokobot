@@ -29,7 +29,7 @@ public class Coords implements Comparable<Coords> {
 	{
 		if (this.row != other.row)
 			return this.row - other.row;
-		return this.col - other.col;
+		return 0;
 	}
 
 	@Override
