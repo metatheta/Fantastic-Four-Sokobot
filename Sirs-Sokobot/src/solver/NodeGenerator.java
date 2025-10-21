@@ -274,12 +274,12 @@ public class NodeGenerator {
 	}
 
 	public static char invertDirection(char dir) {
-		switch (dir) {
-			case 'u': return 'd';
-			case 'd': return 'u';
-			case 'l': return 'r';
-			case 'r': return 'l';
-			default: return ' ';
-		}
+        return switch (dir) {
+            case 'u' -> 'd';
+            case 'd' -> 'u';
+            case 'l' -> 'r';
+            case 'r' -> 'l';
+            default -> ' ';
+        };
 	}
 }
