@@ -47,10 +47,18 @@ public class NodeGenerator {
 		// spaces for pushing
 		ArrayList<State> states = generateStates(node.state, search);
 		// System.out.println(states);
+		// System.out.println();
 		
 		// Generate the nodes associated with these states
 		for (State state : states) {
-			Node newNode = new Node(state, node, heuristic);
+			// if (state.boxes.size() != board.goals.size()) {
+			// 	continue;
+			// }
+
+			if (state == null)
+				continue;
+			
+			Node newNode = new Node(state, node, heuristic, node.totalCost + 1);
 			nodes.add(newNode);
 		}
 
@@ -108,6 +116,12 @@ public class NodeGenerator {
 			HashMap<Coords, Character> boxSpaces = new HashMap<>();
 			for (char dir : dirs) {
 				Coords ne = applyMove(box, dir);
+				if (board.walls.contains(ne))
+					continue;
+
+				if (boxes.contains(ne))
+					continue;
+				
 				if (explored.contains(ne))
 					boxSpaces.put(ne, invertDirection(dir));
 			}
@@ -130,14 +144,23 @@ public class NodeGenerator {
 		ArrayList<State> states = new ArrayList<State>();
 		for (SearchedBox searchedBox : searchedBoxes) {
 			for (Coords boxSpace : searchedBox.spaces.keySet()) {
+				if (board.walls.contains(boxSpace))
+					continue;
+				
+				if (state.boxes.contains(boxSpace))
+					continue;
+				
 				// Check if box can even be pushed from space
 				if (!isActionValid(state.boxes, searchedBox.box, searchedBox.spaces.get(boxSpace))) {
 					continue;
 				}
 				
 				State newState = generateState(boxSpace, state.boxes, searchedBox.spaces.get(boxSpace));
-				if (!state.boxes.equals(newState.boxes))
-					states.add(newState);
+				states.add(newState);
+				// if (!state.boxes.equals(newState.boxes))
+				// 	states.add(newState);
+				// if (!state.boxes.equals(newState.boxes))
+				// 	states.add(newState);
 			}
 		}
 		return states;
@@ -156,40 +179,75 @@ public class NodeGenerator {
 	 * @return Brand new state
 	 */
 	private State generateState(Coords player, HashSet<Coords> boxes, char action) {
+		// System.out.printf("\nGENERATING STATE\n");
+		// System.out.printf("Player: %s\n", player);
+		// System.out.printf("Boxes: %s\n", boxes);
+		// System.out.printf("Action: %s\n", action);
+		
 		// Apply action to player
+		// Coords newPlayer = player.clone();
+		// if (isActionValid(boxes, applyMove(player.clone(), action), action)) {
+		// 	newPlayer = applyMove(player.clone(), action);
+		// }
 		Coords newPlayer = applyMove(player.clone(), action);
-		// System.out.printf("OLD: %s\nNEW: %s\n", player, newPlayer);
 		
 		HashSet<Coords> newBoxes = new HashSet<Coords>(boxes);
 		// If any of the boxes gets moved as a result
 		// of the previous action being applied...
 		if (newBoxes.contains(newPlayer)) {
+			// System.out.printf("===\nOverlap: %s\n", newPlayer);
 			// Move the box!
 			// At this point it is assumed that the movement
 			// is always legal as it was vetted earlier
 			// (...........Unless its wrong)
 			newBoxes.remove(newPlayer);
+			// System.out.printf("Contains %s? %b\n", newPlayer, newBoxes.contains(newPlayer));
 			Coords newBox = applyMove(newPlayer.clone(), action);
+			// System.out.printf("New box: %s\n\n", newBox);
 			newBoxes.add(newBox);
+			// System.out.printf("New boxes: %s\n\n", newBoxes);
 		}
+
+		if (newBoxes.size() != board.goals.size())
+			return null;
 		
+		// System.out.printf("===\nNew player: %s\n", newPlayer);
+		// System.out.printf("New boxes: %s\n", newBoxes);
+		// System.out.printf("Last action: %s\n", action);
 		return new State(newPlayer, newBoxes, action);
 	}
 
 	private boolean isActionValid(HashSet<Coords> boxes, Coords from, char action) {
-		Coords target = applyMove(from, action);
+		// if (board.walls.contains(from) || boxes.contains(from))
+		// 	return false;
 		
+		// System.out.printf("\nCHECKING ACTION VALIDITY\n");
+		// System.out.printf("Boxes: %s\n", boxes);
+		// System.out.printf("From: %s\n", from);
+		// System.out.printf("Action: %s\n", action);
+		// System.out.printf("-\n");
+		// System.out.printf("Walls: %s\n===\n", board.walls);
+		
+		Coords target = applyMove(from, action);
+		// System.out.printf("Target: %s\n", target);
+
 		if (board.walls.contains(target)) {
+			// System.out.printf("Walls contain %s :(\n", target);
 			return false;
 		}
 
 		if (boxes.contains(target)) {
 			Coords pushTarget = applyMove(target, action);
+			// System.out.printf("Boxes contain %s ...?\n", target);
+			// System.out.printf("\tPush target: %s\n", pushTarget);
+			// System.out.printf("\tDo walls have %s? %b\n", pushTarget, board.walls.contains(pushTarget));
+			// System.out.printf("\tDo boxes have %s? %b\n\n", pushTarget, boxes.contains(pushTarget));
 
             return !board.walls.contains(pushTarget)
                     && !boxes.contains(pushTarget);
 		}
 		
+		// System.out.printf("VALID!\n\n");
 		return true;
 	}
 

@@ -18,7 +18,7 @@ public class SokoBot {
 
         // Generate initial state and node
 		State initialState = generateInitialState(board, itemsData);
-		Node initialNode = new Node(initialState, null, heuristic);
+		Node initialNode = new Node(initialState, null, heuristic, 0);
 
 		// Initialize frontier and explored set
 		PriorityQueue<Node> frontier = new PriorityQueue<Node>(new NodeComparator());
@@ -29,17 +29,21 @@ public class SokoBot {
             Node currentNode = frontier.poll();
 			explored.add(currentNode.state);
 
+			// System.out.println("[CURRENT NODE]");
 			// System.out.println(currentNode);
 
 			if (isGoalState(currentNode.state, board)) {
-				System.out.println("\n========================");
-				System.out.println("GENERATING GOAL PATH NOW");
-				System.out.println("========================\n");
+				// System.out.println("\n========================");
+				// System.out.println("GENERATING GOAL PATH NOW");
+				// System.out.println("========================\n");
 
 				return generateGoalPath(currentNode, board);
 			}
 
 			ArrayList<Node> nodes = nodeGenerator.generateNodes(currentNode, board, heuristic);
+			// System.out.println("-");
+			// System.out.println(nodes);
+			// System.out.println();
 			for (Node node : nodes) {
 				if (explored.contains(node.state))
 					continue;

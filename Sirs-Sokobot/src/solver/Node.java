@@ -6,11 +6,13 @@ public class Node {
     public final State state;
 	public final Node parent;
 	public final int heuristic;
+	public final int totalCost;
 
-    public Node(State state, Node parent, Heuristic heuristic) {
+    public Node(State state, Node parent, Heuristic heuristic, int cost) {
         this.state = state;
         this.parent = parent;
 		this.heuristic = heuristic.calculateHeuristic(state);
+		this.totalCost = this.heuristic + cost;
     }
 
     @Override
@@ -28,6 +30,6 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return "State: " + state + "\nHeuristic: " + heuristic;
+		return "State #" + hashCode() + ": {" + state + "}, Heuristic: " + heuristic;
 	}
 }

@@ -58,12 +58,19 @@ public class State {
         if (!(o instanceof State s))
             return false;
 
-		return Objects.equals(this.boxes, s.boxes);
+		// return Objects.equals(this.boxes, s.boxes);
+		return Objects.equals(this.boxes, s.boxes)
+			&& Objects.equals(this.last, s.last);
+		// return Objects.equals(this.player, s.player)
+			// && Objects.equals(this.boxes, s.boxes)
+			// && Objects.equals(this.last, s.last);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(boxes);
+        // return Objects.hash(boxes);
+        return Objects.hash(boxes, last);
+        // return Objects.hash(player, boxes, last);
     }
 
 	@Override
