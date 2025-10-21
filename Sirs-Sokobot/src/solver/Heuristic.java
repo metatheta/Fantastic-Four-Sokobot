@@ -19,7 +19,7 @@ public class Heuristic {
 
         //Compute heuristic value
 		int value = 0;
-        // value += distancePlayerBox(state); //Search closest box + manhattan distance to a goal state
+        value += distancePlayerBox(state); //Search closest box + manhattan distance to a goal state
         // if (state.pushState)
         value += manhattanBoxGoal(state); //When pushing the box compute total manhattan distance
 
