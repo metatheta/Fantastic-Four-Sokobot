@@ -111,6 +111,7 @@ public class SokoBot {
 
 		String result = sb.reverse().toString();
 		System.out.printf("FINAL -> %s", result);
+        System.out.println("Total moves: " + result.length());
 		// System.out.printf("Total cost: %d\n", totalCost);
 		return result;
 	}
@@ -124,11 +125,10 @@ public class SokoBot {
 	 * coordinates to the end. Each player move is found by comparing two coordinates
 	 * and finding their difference. An external function is used for this.
 	 * 
-	 * @param start Start coordinates
-	 * @param end Ending coordinates to find
-	 * @param state State
+	 * @param from Start coordinates
+	 * @param to Ending coordinates to find
 	 * @param board Board
-	 * @return
+	 * @return path string
 	 */
 	// private String searchPath(Coords start, Coords end, State state, char ababa, SokoBanBoard board) {
 	private String searchPath(State from, State to, SokoBanBoard board) {
