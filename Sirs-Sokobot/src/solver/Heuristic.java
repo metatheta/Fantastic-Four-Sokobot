@@ -29,6 +29,7 @@ public class Heuristic {
         int value = 0;
         for (Coords box : state.boxes) {
             playerBoxMin = goalBoxMin = 99999;
+
             //compute minimum manhattan distance from box to nearest goal
             if (boxValues.containsKey(box.hashCode())) {
                 goalBoxMin = boxValues.get(box.hashCode());
@@ -43,12 +44,14 @@ public class Heuristic {
                 boxValues.put(box.hashCode(), goalBoxMin);
             }
 
-            //Compute manhattan distance from player to box
+            //Compute manhattan distance from player to current box
             playerBoxDistance = Math.abs(state.player.col - box.col)
                     + Math.abs(state.player.row - box.row);
             if (playerBoxDistance < playerBoxMin) {
                 playerBoxMin = playerBoxDistance;
             }
+
+            //add values
             value += goalBoxMin + playerBoxMin;
         }
 		stateValues.put(state.hashCode(), value);

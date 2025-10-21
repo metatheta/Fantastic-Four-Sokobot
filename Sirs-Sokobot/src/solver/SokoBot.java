@@ -110,9 +110,8 @@ public class SokoBot {
 		}
 
 		String result = sb.reverse().toString();
-		System.out.printf("FINAL -> %s", result);
+		System.out.println("FINAL -> " + result);
         System.out.println("Total moves: " + result.length());
-		// System.out.printf("Total cost: %d\n", totalCost);
 		return result;
 	}
 
@@ -139,9 +138,35 @@ public class SokoBot {
 		HashSet<Coords> exploredSet = new HashSet<>(); 
 		frontier.add(new SimpleImmutableEntry<>(start, null));
 
-		char[] dirs = {'l', 'u', 'd', 'r'};
-		
-		// Breadth-first search to find the path
+        char[] dirs = {'l', 'u', 'd', 'r'};
+        /*
+        char[] dirs = {'l', 'u', 'r', 'd'};
+        char[] dirs = {'l', 'd', 'u', 'r'};
+        char[] dirs = {'l', 'd', 'r', 'u'};
+        char[] dirs = {'l', 'r', 'u', 'd'};
+        char[] dirs = {'l', 'r', 'd', 'u'};
+        char[] dirs = {'u', 'l', 'd', 'r'};
+        char[] dirs = {'u', 'l', 'r', 'd'};
+        char[] dirs = {'u', 'd', 'l', 'r'};
+        char[] dirs = {'u', 'd', 'r', 'l'};
+        char[] dirs = {'u', 'r', 'l', 'd'};
+        char[] dirs = {'u', 'r', 'd', 'l'};
+        char[] dirs = {'d', 'l', 'u', 'r'};
+        char[] dirs = {'d', 'l', 'r', 'u'};
+        char[] dirs = {'d', 'u', 'l', 'r'};
+        char[] dirs = {'d', 'u', 'r', 'l'};
+        char[] dirs = {'d', 'r', 'l', 'u'};
+        char[] dirs = {'d', 'r', 'u', 'l'};
+        char[] dirs = {'r', 'l', 'u', 'd'};
+        char[] dirs = {'r', 'l', 'd', 'u'};
+        char[] dirs = {'r', 'u', 'l', 'd'};
+        char[] dirs = {'r', 'u', 'd', 'l'};
+        char[] dirs = {'r', 'd', 'l', 'u'};
+        char[] dirs = {'r', 'd', 'u', 'l'};
+         */
+
+
+        // Breadth-first search to find the path
 		// System.out.printf("SEARCHING FROM %s TO %s\n", start, to.player);
 		while (!frontier.isEmpty()) {
 			SimpleImmutableEntry<Coords,Coords> co = frontier.poll();
