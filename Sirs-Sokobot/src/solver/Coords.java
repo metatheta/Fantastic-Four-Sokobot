@@ -1,7 +1,5 @@
 package solver;
 
-import java.util.Objects;
-
 public class Coords {
     public int row;
     public int col;
@@ -28,8 +26,8 @@ public class Coords {
 
     @Override
     public int hashCode() {
-        // return 31 * row + col;
-		return Objects.hash(this.row, this.col);
+        return 31 * row + col;
+		// return Objects.hash(this.row, this.col);
     }
 
 	@Override

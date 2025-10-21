@@ -25,4 +25,9 @@ public class Node {
     public int hashCode() {
         return this.state.hashCode();
     }
+
+	@Override
+	public String toString() {
+		return "State: " + state + "\nHeuristic: " + heuristic;
+	}
 }

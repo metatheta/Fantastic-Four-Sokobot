@@ -7,10 +7,13 @@ public class State {
     public static int stateCount = 0;
 	public final Coords player;
     public final HashSet<Coords> boxes;
+	public final char last;
 
-    public State(Coords player, HashSet<Coords> boxes) {
+    public State(Coords player, HashSet<Coords> boxes, char last) {
         this.player = player;
 		this.boxes = new HashSet<Coords>(boxes);
+		this.last = last;
+
         State.stateCount += 1;
     }
 
@@ -65,6 +68,6 @@ public class State {
 
 	@Override
 	public String toString() {
-		return "Player: " + player.toString() + ", " + "Boxes: " + boxes.toString();
+		return "Player: " + player.toString() + ", " + "Boxes: " + boxes.toString() + ", " + "Last: " + last;
 	}
 }

@@ -136,7 +136,8 @@ public class NodeGenerator {
 				}
 				
 				State newState = generateState(boxSpace, state.boxes, searchedBox.spaces.get(boxSpace));
-				states.add(newState);
+				if (!state.boxes.equals(newState.boxes))
+					states.add(newState);
 			}
 		}
 		return states;
@@ -172,7 +173,7 @@ public class NodeGenerator {
 			newBoxes.add(newBox);
 		}
 		
-		return new State(newPlayer, newBoxes);
+		return new State(newPlayer, newBoxes, action);
 	}
 
 	private boolean isActionValid(HashSet<Coords> boxes, Coords from, char action) {
@@ -192,7 +193,7 @@ public class NodeGenerator {
 		return true;
 	}
 
-	private Coords applyMove(Coords start, char action) {
+	public static Coords applyMove(Coords start, char action) {
 		Coords co = start.clone();
 		
 		int r = 0, c = 0;
@@ -208,7 +209,27 @@ public class NodeGenerator {
 		return co;
 	}
 
-	private char invertDirection(char dir) {
+	public static char getDirection(Coords start, Coords end) {
+		int rDiff = start.row - end.row;
+		int cDiff = start.col - end.col;
+
+		// if (rDiff != 0 && cDiff != 0)
+		// 	throw new Exception("Invalid coordinates given"); 
+
+		if (cDiff < 0)
+			return 'r';
+		else if (cDiff > 0)
+			return 'l';
+		
+		if (rDiff < 0)
+			return 'd';
+		else if (rDiff > 0)
+			return 'u';
+		
+		return ' ';
+	}
+
+	public static char invertDirection(char dir) {
 		switch (dir) {
 			case 'u': return 'd';
 			case 'd': return 'u';
