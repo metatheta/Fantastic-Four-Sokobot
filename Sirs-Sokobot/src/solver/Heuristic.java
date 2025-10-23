@@ -4,6 +4,7 @@ import java.lang.Math;
 
 public class Heuristic {
 	public final SokoBanBoard board;
+    public static HashMap<Integer, Integer> manhattanGoal = new HashMap<Integer, Integer>();
 	private HashMap<Integer, Integer> stateValues;
 	private HashMap<Integer, Integer> boxValues;
 	
@@ -24,23 +25,17 @@ public class Heuristic {
 		if (stateValues.containsKey(state.hashCode()))
 			return stateValues.get(state.hashCode());
 
-        int boxGoalDistance, playerBoxDistance;
+        int playerBoxDistance;
         int goalBoxMin, playerBoxMin;
         int value = 0;
         for (Coords box : state.boxes) {
-            playerBoxMin = goalBoxMin = 99999;
+            playerBoxMin = 99999;
 
             //compute minimum manhattan distance from box to nearest goal
             if (boxValues.containsKey(box.hashCode())) {
                 goalBoxMin = boxValues.get(box.hashCode());
             } else {
-                //Go through each goal
-                for (Coords goal : board.goals) {
-                    boxGoalDistance = Math.abs(goal.col - box.col) + Math.abs(goal.row - box.row);
-                    if (boxGoalDistance < goalBoxMin) {
-                        goalBoxMin = boxGoalDistance;
-                    }
-                }
+                goalBoxMin = manhattanGoal.get(box.hashCode());
                 boxValues.put(box.hashCode(), goalBoxMin);
             }
 
@@ -57,4 +52,29 @@ public class Heuristic {
 		stateValues.put(state.hashCode(), value);
 		return value;
 	}
+
+    /**
+     * Precomputes the manhattan distance of all squares to the nearest goal
+     * @param map the full map layout
+     * @param board the board object containing the list of goals
+     */
+    public static void precomputeManhattanGoal(char[][] map, SokoBanBoard board) {
+        int map_width = map.length;
+        int map_length = map[0].length;
+        int distance, minDistance;
+
+        for (int row = 0; row < map_width; row ++)
+        {
+            for (int col = 0; col < map_length; col ++) {
+                minDistance = 9999;
+                for (Coords goal : board.goals) {
+                    distance = Math.abs(goal.col - col) + Math.abs(goal.row - row);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                    }
+                }
+                manhattanGoal.put(31 * row + col, minDistance);
+            }
+        }
+    }
 }

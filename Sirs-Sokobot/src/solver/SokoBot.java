@@ -13,23 +13,23 @@ public class SokoBot {
 		Heuristic heuristic = new Heuristic(board);
 		NodeGenerator nodeGenerator = new NodeGenerator(board);
 		Squarelock squarelock = new Squarelock(mapData);
-        //squarelock.squarelockCheck();
-		// System.out.println(squarelock.toString());
+        Heuristic.precomputeManhattanGoal(mapData, board);
 
         // Generate initial state and node
 		State initialState = generateInitialState(board, itemsData);
 		Node initialNode = new Node(initialState, null, heuristic, 0);
 
 		// Initialize frontier and explored set
-		//PriorityQueue<Node> frontier = new PriorityQueue<Node>(new NodeComparator());
-
         PriorityQueue<Node> frontier = new PriorityQueue<Node>(initialNode);
 		HashSet<State> explored = new HashSet<State>();
+
         frontier.add(initialNode);
 
+        int count = 0;
         while (!frontier.isEmpty()) {
             Node currentNode = frontier.poll();
 			explored.add(currentNode.state);
+            count ++;
 
 			// System.out.println("[CURRENT NODE]");
 			// System.out.println(currentNode);
@@ -38,7 +38,7 @@ public class SokoBot {
 				// System.out.println("\n========================");
 				// System.out.println("GENERATING GOAL PATH NOW");
 				// System.out.println("========================\n");
-
+                System.out.println("Herbie Explored: "+count+" states");
 				return generateGoalPath(currentNode, board);
 			}
 
@@ -47,10 +47,7 @@ public class SokoBot {
 			// System.out.println(nodes);
 			// System.out.println();
 			for (Node node : nodes) {
-				if (explored.contains(node.state))
-					continue;
-					
-				if (node.state.isDeadlock(board, squarelock.getSquarelockSet()))
+				if (explored.contains(node.state) || node.state.isDeadlock(board, squarelock.getSquarelockSet()))
 					continue;
 				
 				frontier.add(node);
@@ -58,7 +55,7 @@ public class SokoBot {
         }
 
 		// Otherwise, give up ;(
-		System.out.println("FUCKING FUCK FUCK !!!!!!!! :(");
+		System.out.println("Herbie won't say swear words");
         return "";
     }
 
@@ -111,8 +108,8 @@ public class SokoBot {
 		}
 
 		String result = sb.reverse().toString();
-		System.out.println("FINAL -> " + result);
-        System.out.println("Total moves: " + result.length());
+		System.out.println("Herbie's Path -> " + result);
+        System.out.println("Herbie Counted: " + result.length() + " moves");
 		return result;
 	}
 
