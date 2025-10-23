@@ -21,7 +21,9 @@ public class SokoBot {
 		Node initialNode = new Node(initialState, null, heuristic, 0);
 
 		// Initialize frontier and explored set
-		PriorityQueue<Node> frontier = new PriorityQueue<Node>(new NodeComparator());
+		//PriorityQueue<Node> frontier = new PriorityQueue<Node>(new NodeComparator());
+
+        PriorityQueue<Node> frontier = new PriorityQueue<Node>(initialNode);
 		HashSet<State> explored = new HashSet<State>();
         frontier.add(initialNode);
 

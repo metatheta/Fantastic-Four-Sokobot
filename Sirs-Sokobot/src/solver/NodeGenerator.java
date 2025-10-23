@@ -6,7 +6,7 @@ import java.util.*;
  *                                 *
  *    I HAVE WRITTEN               *
  *           WHAT MAY BE           *
- *        THE WORST CODE EVER      *
+ *        THE BEST CODE EVER       *
  *                                 *
  ***********************************/
 
@@ -47,6 +47,7 @@ public class NodeGenerator {
 		// System.out.println();
 		
 		// Generate the nodes associated with these states
+
 		for (State state : states) {
 			// if (state.boxes.size() != board.goals.size()) {
 			// 	continue;
@@ -55,8 +56,9 @@ public class NodeGenerator {
 			if (state == null)
 				continue;
 			
-			Node newNode = new Node(state, node, heuristic, node.totalCost + 1);
-			nodes.add(newNode);
+			//Node newNode = new Node(state, node, heuristic, node.totalCost + 1);
+			//nodes.add(newNode);
+            nodes.add(new Node(state, node, heuristic, node.totalCost + 1));
 		}
 
 		return nodes;
@@ -83,16 +85,13 @@ public class NodeGenerator {
 		char[] dirs = {'l', 'u', 'd', 'r'};
 
 		while (!frontier.isEmpty()) {
-			Coords co = frontier.poll();
+			Coords ne, co = frontier.poll();
 			explored.add(co);
 
 			for (char dir : dirs) {
-				Coords ne = applyMove(co, dir);
+				ne = applyMove(co, dir);
 
-				if (board.walls.contains(ne))
-					continue;
-
-				if (explored.contains(ne))
+				if (board.walls.contains(ne) || explored.contains(ne))
 					continue;
 
 				if (state.boxes.contains(ne)) {
@@ -105,12 +104,10 @@ public class NodeGenerator {
 		}
 		for (Coords box : boxes) {
 			HashMap<Coords, Character> boxSpaces = new HashMap<>();
+            Coords ne;
 			for (char dir : dirs) {
-				Coords ne = applyMove(box, dir);
-				if (board.walls.contains(ne))
-					continue;
-
-				if (boxes.contains(ne))
+				ne = applyMove(box, dir);
+				if (board.walls.contains(ne) || boxes.contains(ne))
 					continue;
 				
 				if (explored.contains(ne))
@@ -132,20 +129,20 @@ public class NodeGenerator {
 	 * @return List of states
 	 */
 	private ArrayList<State> generateStates(State state, ArrayList<SearchedBox> searchedBoxes) {
+        Set<Coords> spaces;
+        State newState;
 		ArrayList<State> states = new ArrayList<State>();
 		for (SearchedBox searchedBox : searchedBoxes) {
-			for (Coords boxSpace : searchedBox.spaces.keySet()) {
-				if (board.walls.contains(boxSpace))
-					continue;
-				
-				if (state.boxes.contains(boxSpace))
+            spaces = searchedBox.spaces.keySet();
+			for (Coords boxSpace : spaces) {
+				if (board.walls.contains(boxSpace) || state.boxes.contains(boxSpace))
 					continue;
 
 				if (!isActionValid(state.boxes, searchedBox.box, searchedBox.spaces.get(boxSpace))) {
 					continue;
 				}
 				
-				State newState = generateState(boxSpace, state.boxes, searchedBox.spaces.get(boxSpace));
+				newState = generateState(boxSpace, state.boxes, searchedBox.spaces.get(boxSpace));
 				states.add(newState);
 			}
 		}
@@ -257,18 +254,19 @@ public class NodeGenerator {
 		int rDiff = start.row - end.row;
 		int cDiff = start.col - end.col;
 
-		// if (rDiff != 0 && cDiff != 0)
-		// 	throw new Exception("Invalid coordinates given"); 
+        if (cDiff != 0)
+        {
+            if (cDiff < 0)
+                return 'r';
+            return 'l';
+        }
 
-		if (cDiff < 0)
-			return 'r';
-		else if (cDiff > 0)
-			return 'l';
-		
-		if (rDiff < 0)
-			return 'd';
-		else if (rDiff > 0)
-			return 'u';
+        if (rDiff != 0)
+        {
+            if (rDiff < 0)
+                return 'd';
+            return 'u';
+        }
 		
 		return ' ';
 	}

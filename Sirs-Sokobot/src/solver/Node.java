@@ -1,8 +1,9 @@
 package solver;
 
+import java.util.Comparator;
 import java.util.Objects;
 
-public class Node {
+public class Node implements Comparator<Node> {
     public final State state;
 	public final Node parent;
 	public final int heuristic;
@@ -13,6 +14,11 @@ public class Node {
         this.parent = parent;
 		this.heuristic = heuristic.calculateHeuristic(state);
 		this.totalCost = this.heuristic + cost;
+    }
+
+    @Override
+    public int compare(Node node1, Node node2) {
+        return Integer.compare(node1.heuristic, node2.heuristic);
     }
 
     @Override
