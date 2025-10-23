@@ -10,12 +10,12 @@ public class Zob {
     private Random rand;
 
 
-    public Zob(int r, int c, long s, HashSet<Coords> boxes)
+    public Zob(int r, int c)
     {
         hashSource = new long[r][c];
         row = r;
         col = c;
-        rand = new Random(s);
+        rand = new Random(4040);
         generateHashSourceArray();
     }
 

@@ -14,6 +14,7 @@ public class SokoBot {
 		NodeGenerator nodeGenerator = new NodeGenerator(board);
 		Squarelock squarelock = new Squarelock(mapData);
         Heuristic.precomputeManhattanGoal(mapData, board);
+		Zob zob = new Zob(height, width);
 
         // Generate initial state and node
 		State initialState = generateInitialState(board, itemsData);
