@@ -47,7 +47,7 @@ public class Heuristic {
             //Compute manhattan distance from player to current box
             playerBoxDistance = Math.abs(state.player.col - box.col)
                     + Math.abs(state.player.row - box.row);
-            if (playerBoxDistance < playerBoxMin) {
+            if (playerBoxDistance < playerBoxMin) { //update the minimum
                 playerBoxMin = playerBoxDistance;
             }
 

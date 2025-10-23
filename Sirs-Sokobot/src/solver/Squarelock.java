@@ -39,62 +39,64 @@ public class Squarelock {
      *      #    #
      */
     //goes not count as deadlock if a goal exists
-    public void belowCheck()
+    public void belowCheck() //updated
     {
         outerLoopBound = map.length - 1;
 
         for (y = 0; y < outerLoopBound; y++)
         {
-            resetStartFlag();
-            resetEndFlag();
-            resetGoalFlag();
+            startFlag = -1; //resetStartFlag
+            endFlag = -1; //resetEndFlag
+            goalFlag = false; /*resetGoalFlag*/
 
             innerLoopBound = map[y].length;
             for (x = 0; x < innerLoopBound; x++)
             {
-                
-                if(isWall(map[y][x]) && isWall(map[y + 1][x]) && startFlagValid())
+                if((map[y][x] == '#') && (map[y + 1][x] == '#'))
                 {
-                    endFlag = x;
-                    //System.out.println("\t" + x + " is end");
-                }
-
-                if(isWall(map[y][x]) && isWall(map[y + 1][x]) && !startFlagValid())
-                {
-                    startFlag = x;
-                    //System.out.println("\t" + x + " is start");
-                }
-
-                if(!isWall(map[y][x]) && startFlagValid())
-                {
-                    resetStartFlag();
-                    resetGoalFlag();
-                    //System.out.println("\t" + x + " is where we RESET startFlag2");
-                }
-
-                if(isGoal(map[y + 1][x]) && startFlagValid())
-                {
-                    goalFlag = true;
-                    //System.out.println("\t" + "Goal flag found at " + x);
-                }
-                    
-
-                if (startFlagValid() && endFlagValid())
-                {
-                    if(!goalFlag)
+                    if (startFlag > -1 /*startFlagValid*/)
                     {
-                        for(i = startFlag + 1; i < endFlag; i++)
+                        endFlag = x;
+                        //System.out.println("\t" + x + " is end");
+                    } else
+                    {
+                        startFlag = x;
+                        //System.out.println("\t" + x + " is start");
+                    }
+                }
+
+                if (startFlag > -1 /*startFlagValid*/)
+                {
+                    if (!(map[y][x] == '#'))
+                    {
+                        startFlag = -1; //resetStartFlag
+                        goalFlag = false; /*resetGoalFlag*/
+                        //System.out.println("\t" + x + " is where we RESET startFlag2");
+                    }
+
+                    if ((map[y + 1][x] == '.'))
+                    {
+                        goalFlag = true;
+                        //System.out.println("\t" + "Goal flag found at " + x);
+                    }
+
+                    if (endFlag > -1 /*endFlagValid*/)
+                    {
+                        if(!goalFlag)
                         {
-                            if(map[y + 1][i] == ' ')
+                            for(i = startFlag + 1; i < endFlag; i++)
                             {
-                                this.squarelockSet.add(new Coords(y+1, i));
+                                if(map[y + 1][i] == ' ')
+                                {
+                                    this.squarelockSet.add(new Coords(y+1, i));
+                                }
                             }
                         }
+
+                        startFlag = endFlag;
+                        endFlag = -1; //resetEndFlag
+                        goalFlag = false; /*resetGoalFlag*/
                     }
-                    
-                    startFlag = endFlag;
-                    resetEndFlag();
-                    resetGoalFlag();
                 }
             }
             //System.out.println("\t" + "====NEXT ROW====");
@@ -107,59 +109,60 @@ public class Squarelock {
      *      ######
      */
     //goes not count as deadlock if a goal exists
-    public void aboveCheck()
+    public void aboveCheck() //updated
     {
         for (y = map.length - 1; y > 0; y--)
         {
-            resetStartFlag();
-            resetEndFlag();
-            resetGoalFlag();
+            startFlag = -1; //resetStartFlag
+            endFlag = -1; //resetEndFlag
+            goalFlag = false; /*resetGoalFlag*/
 
             innerLoopBound = map[y].length;
             for (x = 0; x < innerLoopBound; x++)
             {
-                if(isWall(map[y][x]) && isWall(map[y - 1][x]) && startFlagValid())
+                if ((map[y][x] == '#') && (map[y - 1][x] == '#'))
                 {
-                    endFlag = x;
-                    //System.out.println("\t" + x + " is end");
+                    if (startFlag > -1 /*startFlagValid*/)
+                        endFlag = x;
+                        //System.out.println("\t" + x + " is end");
+                    else
+                        startFlag = x;
+                        //System.out.println("\t" + x + " is start");
                 }
 
-                if(isWall(map[y][x]) && isWall(map[y - 1][x]) && !startFlagValid())
+                if (startFlag > -1 /*startFlagValid*/)
                 {
-                    startFlag = x;
-                    //System.out.println("\t" + x + " is start");
-                }
-
-                if(!isWall(map[y][x]) && startFlagValid())
-                {
-                    resetStartFlag();
-                    resetGoalFlag();
-                    //System.out.println("\t" + x + " is where we RESET startFlag2");
-                }
-
-                if(isGoal(map[y - 1][x]) && startFlagValid())
-                {
-                    goalFlag = true;
-                    //System.out.println("\t" + "Goal flag found at " + x);
-                }
-                    
-
-                if (startFlagValid() && endFlagValid())
-                {
-                    if(!goalFlag)
+                    if (!(map[y][x] == '#'))
                     {
-                        for(i = startFlag + 1; i < endFlag; i++)
+                        startFlag = -1; //resetStartFlag
+                        goalFlag = false; /*resetGoalFlag*/
+                        //System.out.println("\t" + x + " is where we RESET startFlag2");
+                    }
+
+                    if ((map[y - 1][x] == '.'))
+                    {
+                        goalFlag = true;
+                        //System.out.println("\t" + "Goal flag found at " + x);
+                    }
+
+                    if (endFlag > -1 /*endFlagValid*/)
+                    {
+                        if(!goalFlag)
                         {
-                            if(map[y - 1][i] == ' ')
+                            for(i = startFlag + 1; i < endFlag; i++)
                             {
-                                this.squarelockSet.add(new Coords(y-1, i));
+                                if(map[y - 1][i] == ' ')
+                                {
+                                    this.squarelockSet.add(new Coords(y-1, i));
+                                }
                             }
                         }
+
+                        startFlag = endFlag;
+                        endFlag = -1; //resetEndFlag
+                        goalFlag = false; /*resetGoalFlag*/
                     }
-                    
-                    startFlag = endFlag;
-                    resetEndFlag();
-                    resetGoalFlag();
+
                 }
             }
             //System.out.println("\t" + "====NEXT ROW====");
@@ -169,69 +172,68 @@ public class Squarelock {
     //checks deadlocks that look like 
     /*
      *      ##
-     *      #
-     *      #
-     *      #
+     *       #
+     *       #
+     *       #
      *      ##
      */
     //goes not count as deadlock if a goal exists
-    public void rightCheck()
+    public void rightCheck() //updated
     {
         outerLoopBound = map[0].length - 1;
         innerLoopBound = map.length;
 
         for (x = 0; x < outerLoopBound; x++)
         {
-            resetStartFlag();
-            resetEndFlag();
-            resetGoalFlag();
+            startFlag = -1; //resetStartFlag
+            endFlag = -1; //resetEndFlag
+            goalFlag = false; /*resetGoalFlag*/
 
-            
             for (y = 0; y < innerLoopBound; y++)
             {
-                // System.out.println(y);
-                if(isWall(map[y][x]) && isWall(map[y][x + 1]) && startFlagValid())
+                if ((map[y][x] == '#') && (map[y][x + 1] == '#'))
                 {
-                    endFlag = y;
-                    //System.out.println(y + " is end");
+                    if (startFlag > -1 /*startFlagValid*/)
+                        endFlag = y;
+                        //System.out.println(y + " is end");
+                    else
+                        startFlag = y;
+                        //System.out.println(y + " is start");
                 }
 
-                if(isWall(map[y][x]) && isWall(map[y][x + 1]) && !startFlagValid())
+                if (startFlag > -1 /*startFlagValid*/)
                 {
-                    startFlag = y;
-                    //System.out.println(y + " is start");
-                }
-
-                if(!isWall(map[y][x]) && startFlagValid())
-                {
-                    resetStartFlag();
-                    resetGoalFlag();
-                    //System.out.println(y + " is where we RESET startFlag2");
-                }
-
-                if(isGoal(map[y][x + 1]) && startFlagValid())
-                {
-                    goalFlag = true;
-                    //System.out.println("Goal flag found at " + y);
-                }
-                    
-
-                if (startFlagValid() && endFlagValid())
-                {
-                    if(!goalFlag)
+                    if (!(map[y][x] == '#'))
                     {
-                        for(i = startFlag + 1; i < endFlag; i++)
+                        startFlag = -1; //resetStartFlag
+                        goalFlag = false; /*resetGoalFlag*/
+                        //System.out.println(y + " is where we RESET startFlag2");
+                    }
+
+                    if ((map[y][x + 1] == '.'))
+                    {
+                        goalFlag = true;
+                        //System.out.println("Goal flag found at " + y);
+                    }
+
+                    if (endFlag > -1 /*endFlagValid*/)
+                    {
+                        if(!goalFlag)
                         {
-                            if(map[i][x + 1] == ' ')
+                            for(i = startFlag + 1; i < endFlag; i++)
                             {
-                                this.squarelockSet.add(new Coords(i, x+1));
+                                if(map[i][x + 1] == ' ')
+                                {
+                                    this.squarelockSet.add(new Coords(i, x+1));
+                                }
                             }
                         }
+
+                        startFlag = endFlag;
+                        endFlag = -1; //resetEndFlag
+                        goalFlag = false; /*resetGoalFlag*/
                     }
-                    
-                    startFlag = endFlag;
-                    resetEndFlag();
-                    resetGoalFlag();
+
                 }
             }
             //System.out.println("====NEXT COL====");
@@ -247,106 +249,72 @@ public class Squarelock {
      *      ##
      */
     //goes not count as deadlock if a goal exists
-    public void leftCheck()
+    public void leftCheck() //updated
     {
         innerLoopBound = map.length;
 
         for (x =  map[0].length - 1; x > 0; x--)
         {
-            resetStartFlag();
-            resetEndFlag();
-            resetGoalFlag();
+            startFlag = -1; //resetStartFlag
+            endFlag = -1; //resetEndFlag
+            goalFlag = false; /*resetGoalFlag*/
 
             
             for (y = 0; y < innerLoopBound; y++)
             {
                 // System.out.println(y);
-                if(isWall(map[y][x]) && isWall(map[y][x - 1]) && startFlagValid())
+                if ((map[y][x] == '#') && (map[y][x - 1] == '#'))
                 {
-                    endFlag = y;
-                    //System.out.println(y + " is end");
+                    if (startFlag > -1 /*startFlagValid*/)
+                        endFlag = y;
+                        //System.out.println(y + " is end");
+                    else
+                        startFlag = y;
+                        //System.out.println(y + " is start");
                 }
 
-                if(isWall(map[y][x]) && isWall(map[y][x - 1]) && !startFlagValid())
+                if (startFlag > -1 /*startFlagValid*/)
                 {
-                    startFlag = y;
-                    //System.out.println(y + " is start");
-                }
-
-                if(!isWall(map[y][x]) && startFlagValid())
-                {
-                    resetStartFlag();
-                    resetGoalFlag();
-                    //System.out.println(y + " is where we RESET startFlag2");
-                }
-
-                if(isGoal(map[y][x - 1]) && startFlagValid())
-                {
-                    goalFlag = true;
-                    //System.out.println("Goal flag found at " + y);
-                }
-                    
-
-                if (startFlagValid() && endFlagValid())
-                {
-                    if(!goalFlag)
+                    if (!(map[y][x] == '#'))
                     {
-                        for(i = startFlag + 1; i < endFlag; i++)
+                        startFlag = -1; //resetStartFlag
+                        goalFlag = false; /*resetGoalFlag*/
+                        //System.out.println(y + " is where we RESET startFlag2");
+                    }
+
+                    if ((map[y][x - 1] == '.'))
+                    {
+                        goalFlag = true;
+                        //System.out.println("Goal flag found at " + y);
+                    }
+
+                    if (endFlag > -1 /*endFlagValid*/)
+                    {
+                        if(!goalFlag)
                         {
-                            if(map[i][x - 1] == ' ')
+                            for(i = startFlag + 1; i < endFlag; i++)
                             {
-                                this.squarelockSet.add(new Coords(i, x-1));
+                                if(map[i][x - 1] == ' ')
+                                {
+                                    this.squarelockSet.add(new Coords(i, x-1));
+                                }
                             }
                         }
+
+                        startFlag = endFlag;
+                        endFlag = -1; //resetEndFlag
+                        goalFlag = false; /*resetGoalFlag*/
                     }
-                    
-                    startFlag = endFlag;
-                    resetEndFlag();
-                    resetGoalFlag();
                 }
             }
             //System.out.println("====NEXT COL====");
         }
     }
 
+    //important getter
     public HashSet<Coords> getSquarelockSet()
     {
-        return squarelockSet;
-    }
-
-    private boolean isWall(char w)
-    {
-        return w == '#';
-    }
-
-    private void resetStartFlag()
-    {
-        startFlag = -1;
-    }
-
-    private void resetEndFlag()
-    {
-        endFlag = -1;
-    }
-
-    private void resetGoalFlag()
-    {
-        goalFlag = false;
-    }
-
-    private boolean startFlagValid()
-    {
-        return startFlag > -1;
-    }
-
-    private boolean endFlagValid()
-    {
-        return endFlag > -1;
-    }
-
-    private boolean isGoal(char g)
-    {
-        return g == '.';
+        return squarelockSet; //getSquarelockSet
     }
 
     public String toString()
