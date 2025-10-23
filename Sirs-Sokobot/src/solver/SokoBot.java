@@ -13,7 +13,7 @@ public class SokoBot {
 		Heuristic heuristic = new Heuristic(board);
 		NodeGenerator nodeGenerator = new NodeGenerator(board);
 		Squarelock squarelock = new Squarelock(mapData);
-		squarelock.squarelockCheck();
+        //squarelock.squarelockCheck();
 		// System.out.println(squarelock.toString());
 
         // Generate initial state and node
@@ -81,7 +81,6 @@ public class SokoBot {
 	 * This function backtracks through the nodes,
 	 * beginning from the goal node until the initial node,
 	 * and reconstructs the path that could be taken from each node.
-	 * 
 	 * The idea is to search for the path using another search
 	 * algorithm, this time another dirty BFS implementation,
 	 * then store it somewhere. The strings are combined together
@@ -119,7 +118,6 @@ public class SokoBot {
 	 * This function searches for the path from a given set of coordinates
 	 * to another set of coordinates, keeping in mind the walls and the
 	 * boxes, which act as walls for our purposes.
-	 * 
 	 * Afterwards, the path is reconstructed by backtracking from the found
 	 * coordinates to the end. Each player move is found by comparing two coordinates
 	 * and finding their difference. An external function is used for this.
@@ -138,7 +136,7 @@ public class SokoBot {
 		HashSet<Coords> exploredSet = new HashSet<>(); 
 		frontier.add(new SimpleImmutableEntry<>(start, null));
 
-        char[] dirs = {'l', 'u', 'r', 'd'};
+        char[] dirs = {'l', 'u', 'd', 'r'};
 
         // Breadth-first search to find the path
 		// System.out.printf("SEARCHING FROM %s TO %s\n", start, to.player);

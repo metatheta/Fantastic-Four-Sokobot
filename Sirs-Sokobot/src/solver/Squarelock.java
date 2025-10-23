@@ -22,16 +22,23 @@ public class Squarelock {
         squarelockSet = new HashSet<>();
         x = 0;
         y = 0;
+
+        leftCheck();
+        aboveCheck();
+        belowCheck();
+        rightCheck();
     }
 
     //checks the deadlocks in all 4 directions
+    /* NO NEED TO CALL IF ONLY CALLING ONCE, REDUCE FUNCTION CALLS TO STACK TOTAL
     public void squarelockCheck()
     {
-        belowCheck();
-        aboveCheck();
-        rightCheck();
         leftCheck();
+        aboveCheck();
+        belowCheck();
+        rightCheck();
     }
+     */
 
     //checks deadlocks that look like 
     /*
