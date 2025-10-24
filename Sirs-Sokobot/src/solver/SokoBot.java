@@ -14,6 +14,7 @@ public class SokoBot {
         Heuristic.precomputeManhattanGoal(mapData, board);
 		NodeGenerator nodeGenerator = new NodeGenerator(board);
 		Deadlocks deadlocks = new Deadlocks(mapData);
+		// System.out.println(deadlocks.toString());
 
         // Generate initial state and node
 		State initialState = generateInitialState(board, itemsData);
@@ -29,6 +30,7 @@ public class SokoBot {
 			explored.add(currentNode.state);
 
 			if (isGoalState(currentNode.state, board)) {
+				System.out.printf("States: %d\n", State.stateCount);
 				return generateGoalPath(currentNode, board);
 			}
 

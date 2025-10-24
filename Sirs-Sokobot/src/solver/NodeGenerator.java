@@ -106,7 +106,7 @@ public class NodeGenerator {
 				if (board.walls.contains(boxSpace) || state.boxes.contains(boxSpace))
 					continue;
 
-				if (!isActionValid(state.boxes, searchedBox.box, searchedBox.spaces.get(boxSpace))) {
+				if (!isActionValid(this.board, state.boxes, searchedBox.box, searchedBox.spaces.get(boxSpace))) {
 					continue;
 				}
 				
@@ -152,7 +152,7 @@ public class NodeGenerator {
 		return new State(newPlayer, newBoxes, action);
 	}
 
-	private boolean isActionValid(HashSet<Coords> boxes, Coords from, char action) {		
+	public static boolean isActionValid(SokoBanBoard board, HashSet<Coords> boxes, Coords from, char action) {		
 		Coords target = applyMove(from, action);
 
 		if (board.walls.contains(target))
