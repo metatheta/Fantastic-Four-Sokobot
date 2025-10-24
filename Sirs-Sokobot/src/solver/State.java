@@ -8,7 +8,6 @@ public class State {
 	public final Coords player;
     public final HashSet<Coords> boxes;
 	public final char last;
-	public long parentHashValue;
 
     public State(Coords player, HashSet<Coords> boxes, char last) {
         this.player = player;
@@ -71,29 +70,7 @@ public class State {
     @Override
     public int hashCode() {
         // return Objects.hash(boxes);
-        /*
-		return Objects.hash(boxes, last);
-		*/
-		long result = parentHashValue;
-
-		if(last == 'u')
-		{
-			result = result ^ Zob.hashSource[player.row][player.col] ^ Zob.hashSource[player.row - 1][player.col];
-		}
-		else if(last == 'd')
-		{
-			result = result ^ Zob.hashSource[player.row][player.col] ^ Zob.hashSource[player.row + 1][player.col];
-		}
-		else if(last == 'r')
-		{
-			result = result ^ Zob.hashSource[player.row][player.col] ^ Zob.hashSource[player.row][player.col + 1];
-		}
-		else if(last == 'l')
-		{
-			result = result ^ Zob.hashSource[player.row][player.col] ^ Zob.hashSource[player.row][player.col - 1];
-		}
-
-		return (int)result;
+        return Objects.hash(boxes, last);
         // return Objects.hash(player, boxes, last);
     }
 
