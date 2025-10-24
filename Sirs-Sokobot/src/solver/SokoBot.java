@@ -11,9 +11,9 @@ public class SokoBot {
         // Initialize board
 		SokoBanBoard board = new SokoBanBoard(mapData);
 		Heuristic heuristic = new Heuristic(board);
-		NodeGenerator nodeGenerator = new NodeGenerator(board);
-		Squarelock squarelock = new Squarelock(mapData);
         Heuristic.precomputeManhattanGoal(mapData, board);
+		NodeGenerator nodeGenerator = new NodeGenerator(board);
+		Deadlocks deadlocks = new Deadlocks(mapData);
 
         // Generate initial state and node
 		State initialState = generateInitialState(board, itemsData);
@@ -24,30 +24,17 @@ public class SokoBot {
 		HashSet<State> explored = new HashSet<State>();
 
         frontier.add(initialNode);
-
-        int count = 0;
         while (!frontier.isEmpty()) {
             Node currentNode = frontier.poll();
 			explored.add(currentNode.state);
-            count ++;
-
-			// System.out.println("[CURRENT NODE]");
-			// System.out.println(currentNode);
 
 			if (isGoalState(currentNode.state, board)) {
-				// System.out.println("\n========================");
-				// System.out.println("GENERATING GOAL PATH NOW");
-				// System.out.println("========================\n");
-                System.out.println("Herbie Explored: "+count+" states");
 				return generateGoalPath(currentNode, board);
 			}
 
 			ArrayList<Node> nodes = nodeGenerator.generateNodes(currentNode, board, heuristic);
-			// System.out.println("-");
-			// System.out.println(nodes);
-			// System.out.println();
 			for (Node node : nodes) {
-				if (explored.contains(node.state) || node.state.isDeadlock(board, squarelock.getSquarelockSet()))
+				if (explored.contains(node.state) || node.state.isDeadlock(board, deadlocks.deadlocks))
 					continue;
 				
 				frontier.add(node);
@@ -55,10 +42,18 @@ public class SokoBot {
         }
 
 		// Otherwise, give up ;(
-		System.out.println("Herbie won't say swear words");
+		System.out.println("I will kill myself");
         return "";
     }
 
+	/**
+	 * This function generates the initial state
+	 * of the board on program start.
+	 * 
+	 * @param board Board
+	 * @param itemsData Items
+	 * @return The initial state what else is it going to return bro
+	 */
 	private State generateInitialState(SokoBanBoard board, char[][] itemsData) {
 		Coords player = null;
 		HashSet<Coords> boxes = new HashSet<Coords>();
@@ -92,18 +87,9 @@ public class SokoBot {
 	 */
 	private String generateGoalPath(Node goal, SokoBanBoard board) {
 		StringBuilder sb = new StringBuilder();
-		// int totalCost = 0;
 
-		for (Node n = goal; n.parent != null; n = n.parent) {
-			// Coords from = n.state.player;
-			// Coords to = n.parent.state.player;
-			
-			// String path = searchPath(from, to, n.parent.state, n.state.last, board);
+		for (Node n = goal; n.parent != null; n = n.parent) {			
 			String path = searchPath(n.state, n.parent.state, board);
-			// System.out.printf("FROM: %s\n", n.state);
-			// System.out.printf("TO: %s\n", n.parent.state);
-			// System.out.printf("GIVEN: %s\n", n.parent.state);
-			// System.out.printf("SUB-PATH -> %s\n\n", path);
 			sb.append(path);
 		}
 
@@ -126,7 +112,6 @@ public class SokoBot {
 	 * @param board Board
 	 * @return path string
 	 */
-	// private String searchPath(Coords start, Coords end, State state, char ababa, SokoBanBoard board) {
 	private String searchPath(State from, State to, SokoBanBoard board) {
 		Coords start = NodeGenerator.applyMove(from.player, NodeGenerator.invertDirection(from.last));
 		
@@ -138,18 +123,15 @@ public class SokoBot {
         char[] dirs = {'l', 'u', 'd', 'r'};
 
         // Breadth-first search to find the path
-		// System.out.printf("SEARCHING FROM %s TO %s\n", start, to.player);
 		while (!frontier.isEmpty()) {
 			SimpleImmutableEntry<Coords,Coords> co = frontier.poll();
 			explored.push(co);
-			// System.out.printf("PUSHING: %s FROM %s\n", co.getKey(), co.getValue());
 			exploredSet.add(co.getKey());
 
 			// If the path is found, stop
 			// The goal coordinates should be at the top of the
 			// explored stack
 			if (co.getKey().equals(to.player)) {
-				// System.out.printf("-> FOUND!\n");
 				break;
 			}
 
@@ -169,23 +151,13 @@ public class SokoBot {
 			}
 		}
 
-		// System.out.printf("EXPLORED: %s\n\n", explored);
-
 		// Reconstruct the path by going through the
 		// explored stack of coordinates
 		// Similar to how sir does it on Excel
-		// StringBuilder sb = new StringBuilder();
-		// SimpleImmutableEntry<Coords,Coords> last = explored.pop();
 		ArrayDeque<SimpleImmutableEntry<Coords,Coords>> path = new ArrayDeque<>();
 		path.push(explored.pop());
-		// sb.append(from.last);
-		// sb.append(NodeGenerator.getDirection(last.getKey(), last.getValue()));
-		// System.out.printf("SEARCHING FROM %s to %s\n", start, to.player);
-		// System.out.printf("GOAL: %s FROM %s\n", path.getFirst().getKey(), path.getFirst().getValue());
 		while (!explored.isEmpty()) {
 			SimpleImmutableEntry<Coords,Coords> ex = explored.pop();
-			// System.out.printf("CHECKING EXPLORED: %s FROM %s\n", 
-				// ex.getKey(), ex.getValue());
 
 			if (ex.getValue() == null) {
 				path.push(ex);
@@ -193,38 +165,23 @@ public class SokoBot {
 			}
 
 			if (ex.getKey().equals(path.getFirst().getValue())) {
-				// last = ex;
 				path.push(ex);
-				// The direction needed to get from one set of coordinates
-				// to another is found from this function
-				// sb.append(NodeGenerator.getDirection(ex.getKey(), path.getLast().getValue()));
-				// System.out.printf("\t> FOUND\n");
 			}
 		}
 
 		StringBuilder sb = new StringBuilder();
-		// System.out.printf("%s\n\n", path);
 		sb.append(from.last);
 		while (!path.isEmpty()) {
 			SimpleImmutableEntry<Coords,Coords> co = path.pollFirst();
-			// System.out.println(co);
 
 			if (co.getValue() == null) {
 				continue;
 			}
 
 			char direction = NodeGenerator.getDirection(co.getKey(), co.getValue());
-			// sb.append(NodeGenerator.invertDirection(direction));
 			sb.append(direction);
 		}
-		// System.out.printf("%s\n\n", path);
 
-		// sb.append(NodeGenerator.getDirection(last.getKey(), last.getValue()));
-		
-		// frontier = null;
-		// explored = null;
-		// exploredSet = null;
-		// System.gc();
 		return sb.toString();
 	}
 

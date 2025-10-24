@@ -17,37 +17,13 @@ public class State {
         State.stateCount += 1;
     }
 
-    public boolean isDeadlock(SokoBanBoard board, HashSet<Coords> squarelocks) {
+    public boolean isDeadlock(SokoBanBoard board, HashSet<Coords> deadlocks) {
         for (Coords box : boxes) {
             if (board.goals.contains(box)) 
                 continue;
 
-			if (squarelocks.contains(box))
+			if (deadlocks.contains(box))
 				return true;
-
-			// Top-left
-			if (board.walls.contains(new Coords(box.row-1, box.col))
-				&& board.walls.contains(new Coords(box.row, box.col+1))) {
-				return true;
-			}
-
-			// Top-right
-			if (board.walls.contains(new Coords(box.row-1, box.col))
-				&& board.walls.contains(new Coords(box.row, box.col-1))) {
-				return true;
-			}
-
-			// Bottom-left
-			if (board.walls.contains(new Coords(box.row+1, box.col))
-				&& board.walls.contains(new Coords(box.row, box.col-1))) {
-				return true;
-			}
-
-			// Bottom-right
-			if (board.walls.contains(new Coords(box.row+1, box.col))
-				&& board.walls.contains(new Coords(box.row, box.col+1))) {
-				return true;
-			}
         }
 
         return false;
@@ -58,20 +34,13 @@ public class State {
         if (!(o instanceof State s))
             return false;
 
-		// return Objects.equals(this.boxes, s.boxes);
 		return Objects.equals(this.boxes, s.boxes)
 			&& Objects.equals(this.last, s.last);
-		// return Objects.equals(this.player, s.player)
-			// && Objects.equals(this.boxes, s.boxes)
-			// && Objects.equals(this.last, s.last);
     }
 
-	// SOMETHING GWEL CHANGED V
     @Override
     public int hashCode() {
-        // return Objects.hash(boxes);
         return Objects.hash(boxes, last);
-        // return Objects.hash(player, boxes, last);
     }
 
 	@Override

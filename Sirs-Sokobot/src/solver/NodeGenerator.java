@@ -2,14 +2,6 @@ package solver;
 
 import java.util.*;
 
-/***********************************
- *                                 *
- *    I HAVE WRITTEN               *
- *           WHAT MAY BE           *
- *        THE BEST CODE EVER       *
- *                                 *
- ***********************************/
-
 public class NodeGenerator {
 	private SokoBanBoard board;
 
@@ -18,22 +10,6 @@ public class NodeGenerator {
 	}
 	
 	public ArrayList<Node> generateNodes(Node node, SokoBanBoard board, Heuristic heuristic) {	
-		/*
-			Generate possible nodes from a node
-			1) Starting from the player position in a state, search for
-			   a path towards nearby accessible boxes
-				- Just a simple BFS/flood-fill could probably work here
-				- Find the Coords of boxes with this search
-				- Consider boxes as walls
-				- Coords found in the BFS search are stored somewhere
-			2) Find boxes that can be legally pushed by the player
-				- A box can be legally pushed from a side if that side
-				  existed in the BFS search (and if there's space of course)
-			3) Generate the new states and nodes from the theoretical pushing
-			   of these boxes
-				- Deadlocks resulting from these pushes are also checked here
-		*/
-		
 		ArrayList<Node> nodes = new ArrayList<Node>();
 		
 		// Look for all boxes available to the player, as well as
@@ -43,21 +19,13 @@ public class NodeGenerator {
 		// Generate the possible states from all of the given
 		// spaces for pushing
 		ArrayList<State> states = generateStates(node.state, search);
-		// System.out.println(states);
-		// System.out.println();
 		
 		// Generate the nodes associated with these states
-
 		for (State state : states) {
-			// if (state.boxes.size() != board.goals.size()) {
-			// 	continue;
-			// }
 
 			if (state == null)
 				continue;
 			
-			//Node newNode = new Node(state, node, heuristic, node.totalCost + 1);
-			//nodes.add(newNode);
             nodes.add(new Node(state, node, heuristic, node.totalCost + 1));
 		}
 
@@ -162,75 +130,41 @@ public class NodeGenerator {
 	 * @return Brand new state
 	 */
 	private State generateState(Coords player, HashSet<Coords> boxes, char action) {
-		// System.out.printf("\nGENERATING STATE\n");
-		// System.out.printf("Player: %s\n", player);
-		// System.out.printf("Boxes: %s\n", boxes);
-		// System.out.printf("Action: %s\n", action);
-		
 		// Apply action to player
-		// Coords newPlayer = player.clone();
-		// if (isActionValid(boxes, applyMove(player.clone(), action), action)) {
-		// 	newPlayer = applyMove(player.clone(), action);
-		// }
 		Coords newPlayer = applyMove(player.clone(), action);
-		
 		HashSet<Coords> newBoxes = new HashSet<Coords>(boxes);
+
 		// If any of the boxes gets moved as a result
 		// of the previous action being applied...
 		if (newBoxes.contains(newPlayer)) {
-			// System.out.printf("===\nOverlap: %s\n", newPlayer);
 			// Move the box!
 			// At this point it is assumed that the movement
 			// is always legal as it was vetted earlier
 			// (...........Unless its wrong)
 			newBoxes.remove(newPlayer);
-			// System.out.printf("Contains %s? %b\n", newPlayer, newBoxes.contains(newPlayer));
 			Coords newBox = applyMove(newPlayer.clone(), action);
-			// System.out.printf("New box: %s\n\n", newBox);
 			newBoxes.add(newBox);
-			// System.out.printf("New boxes: %s\n\n", newBoxes);
 		}
 
 		if (newBoxes.size() != board.goals.size())
 			return null;
 		
-		// System.out.printf("===\nNew player: %s\n", newPlayer);
-		// System.out.printf("New boxes: %s\n", newBoxes);
-		// System.out.printf("Last action: %s\n", action);
 		return new State(newPlayer, newBoxes, action);
 	}
 
-	private boolean isActionValid(HashSet<Coords> boxes, Coords from, char action) {
-		// if (board.walls.contains(from) || boxes.contains(from))
-		// 	return false;
-		
-		// System.out.printf("\nCHECKING ACTION VALIDITY\n");
-		// System.out.printf("Boxes: %s\n", boxes);
-		// System.out.printf("From: %s\n", from);
-		// System.out.printf("Action: %s\n", action);
-		// System.out.printf("-\n");
-		// System.out.printf("Walls: %s\n===\n", board.walls);
-		
+	private boolean isActionValid(HashSet<Coords> boxes, Coords from, char action) {		
 		Coords target = applyMove(from, action);
-		// System.out.printf("Target: %s\n", target);
 
-		if (board.walls.contains(target)) {
-			// System.out.printf("Walls contain %s :(\n", target);
+		if (board.walls.contains(target))
 			return false;
-		}
 
 		if (boxes.contains(target)) {
 			Coords pushTarget = applyMove(target, action);
-			// System.out.printf("Boxes contain %s ...?\n", target);
-			// System.out.printf("\tPush target: %s\n", pushTarget);
-			// System.out.printf("\tDo walls have %s? %b\n", pushTarget, board.walls.contains(pushTarget));
-			// System.out.printf("\tDo boxes have %s? %b\n\n", pushTarget, boxes.contains(pushTarget));
 
             return !board.walls.contains(pushTarget)
                     && !boxes.contains(pushTarget);
 		}
 		
-		// System.out.printf("VALID!\n\n");
 		return true;
 	}
 

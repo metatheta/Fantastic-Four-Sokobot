@@ -1,7 +1,7 @@
 package solver;
 import java.util.HashSet;
 
-public class Squarelock {
+public class Deadlocks {
     
     private char[][] map;
     private int x;
@@ -9,36 +9,62 @@ public class Squarelock {
     private int i;
     private int outerLoopBound;
     private int innerLoopBound;
-    private HashSet<Coords> squarelockSet;
+    public final HashSet<Coords> deadlocks;
     private boolean goalFlag;
     private int startFlag;
     private int endFlag;
 
-    //has the mapdata as an attribute
-    public Squarelock(char[][] m)
+    public Deadlocks(char[][] m)
     {
         map = m;
         goalFlag = false;
-        squarelockSet = new HashSet<>();
+        deadlocks = new HashSet<>();
         x = 0;
         y = 0;
 
+		cornerCheck();
         leftCheck();
         aboveCheck();
         belowCheck();
         rightCheck();
     }
 
-    //checks the deadlocks in all 4 directions
-    /* NO NEED TO CALL IF ONLY CALLING ONCE, REDUCE FUNCTION CALLS TO STACK TOTAL
-    public void squarelockCheck()
-    {
-        leftCheck();
-        aboveCheck();
-        belowCheck();
-        rightCheck();
-    }
-     */
+	private void cornerCheck()
+	{
+		for (int row = 1; row < map.length-1; row++)
+		{
+			for (int col = 1; col < map[row].length-1; col++)
+			{
+				// Ignore goal
+				if (map[row][col] == '.' || map[row][col] == '#')
+					continue;
+				
+				// Top-left
+				if (map[row-1][col] == '#' && map[row][col+1] == '#')
+				{
+					deadlocks.add(new Coords(row, col));
+				}
+				
+				// Top-right
+				if (map[row-1][col] == '#' && map[row][col-1] == '#')
+				{
+					deadlocks.add(new Coords(row, col));
+				}
+
+				// Bottom-left
+				if (map[row+1][col] == '#' && map[row][col-1] == '#')
+				{
+					deadlocks.add(new Coords(row, col));
+				}
+
+				// Bottom-right
+				if (map[row+1][col] == '#' && map[row][col+1] == '#')
+				{
+					deadlocks.add(new Coords(row, col));
+				}
+			}
+		}
+	}
 
     //checks deadlocks that look like 
     /*
@@ -46,7 +72,7 @@ public class Squarelock {
      *      #    #
      */
     //goes not count as deadlock if a goal exists
-    public void belowCheck() //updated
+    private void belowCheck() //updated
     {
         outerLoopBound = map.length - 1;
 
@@ -95,7 +121,7 @@ public class Squarelock {
                             {
                                 if(map[y + 1][i] == ' ')
                                 {
-                                    this.squarelockSet.add(new Coords(y+1, i));
+                                    this.deadlocks.add(new Coords(y+1, i));
                                 }
                             }
                         }
@@ -116,7 +142,7 @@ public class Squarelock {
      *      ######
      */
     //goes not count as deadlock if a goal exists
-    public void aboveCheck() //updated
+    private void aboveCheck() //updated
     {
         for (y = map.length - 1; y > 0; y--)
         {
@@ -160,7 +186,7 @@ public class Squarelock {
                             {
                                 if(map[y - 1][i] == ' ')
                                 {
-                                    this.squarelockSet.add(new Coords(y-1, i));
+                                    this.deadlocks.add(new Coords(y-1, i));
                                 }
                             }
                         }
@@ -185,7 +211,7 @@ public class Squarelock {
      *      ##
      */
     //goes not count as deadlock if a goal exists
-    public void rightCheck() //updated
+    private void rightCheck() //updated
     {
         outerLoopBound = map[0].length - 1;
         innerLoopBound = map.length;
@@ -231,7 +257,7 @@ public class Squarelock {
                             {
                                 if(map[i][x + 1] == ' ')
                                 {
-                                    this.squarelockSet.add(new Coords(i, x+1));
+                                    this.deadlocks.add(new Coords(i, x+1));
                                 }
                             }
                         }
@@ -256,7 +282,7 @@ public class Squarelock {
      *      ##
      */
     //goes not count as deadlock if a goal exists
-    public void leftCheck() //updated
+    private void leftCheck() //updated
     {
         innerLoopBound = map.length;
 
@@ -303,7 +329,7 @@ public class Squarelock {
                             {
                                 if(map[i][x - 1] == ' ')
                                 {
-                                    this.squarelockSet.add(new Coords(i, x-1));
+                                    this.deadlocks.add(new Coords(i, x-1));
                                 }
                             }
                         }
@@ -319,10 +345,10 @@ public class Squarelock {
     }
 
     //important getter
-    public HashSet<Coords> getSquarelockSet()
-    {
-        return squarelockSet; //getSquarelockSet
-    }
+    // public HashSet<Coords> get()
+    // {
+    //     return deadlocks; //getSquarelockSet
+    // }
 
     public String toString()
     {
@@ -331,7 +357,7 @@ public class Squarelock {
         for (int row = 0; row < map.length; row++) 
         {
             for (int col = 0; col < map[i].length; col++) {
-				if (squarelockSet.contains(new Coords(row, col)))
+				if (deadlocks.contains(new Coords(row, col)))
 					sb.append('X');
 				else
 					sb.append(map[row][col]);

@@ -18,7 +18,7 @@ public class Node implements Comparator<Node> {
 
     @Override
     public int compare(Node node1, Node node2) {
-        return Integer.compare(node1.heuristic, node2.heuristic);
+		return Integer.compare(node1.heuristic, node2.heuristic);
     }
 
     @Override
