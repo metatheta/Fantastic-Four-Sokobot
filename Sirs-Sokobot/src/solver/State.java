@@ -8,7 +8,7 @@ public class State {
 	public final Coords player;
     public final HashSet<Coords> boxes;
 	public final char last;
-	public long hashValue;
+	public long parentHashValue;
 
     public State(Coords player, HashSet<Coords> boxes, char last) {
         this.player = player;
@@ -67,13 +67,14 @@ public class State {
 			// && Objects.equals(this.last, s.last);
     }
 
+	// SOMETHING GWEL CHANGED V
     @Override
     public int hashCode() {
         // return Objects.hash(boxes);
         /*
 		return Objects.hash(boxes, last);
 		*/
-		long result = hashValue;
+		long result = parentHashValue;
 
 		if(last == 'u')
 		{

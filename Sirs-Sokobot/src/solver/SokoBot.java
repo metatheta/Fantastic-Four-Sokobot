@@ -9,15 +9,18 @@ import java.util.PriorityQueue;
 public class SokoBot {
     public String solveSokobanPuzzle(int width, int height, char[][] mapData, char[][] itemsData) {
         // Initialize board
+		// SOMETHING GWEL ADDED V
+		Zob zob = new Zob(height, width);
 		SokoBanBoard board = new SokoBanBoard(mapData);
 		Heuristic heuristic = new Heuristic(board);
 		NodeGenerator nodeGenerator = new NodeGenerator(board);
 		Squarelock squarelock = new Squarelock(mapData);
         Heuristic.precomputeManhattanGoal(mapData, board);
-		Zob zob = new Zob(height, width);
 
         // Generate initial state and node
 		State initialState = generateInitialState(board, itemsData);
+		// SOMETHING GWEL ADDED V
+		initialState.parentHashValue = zob.initialHash(initialState.boxes);
 		Node initialNode = new Node(initialState, null, heuristic, 0);
 
 		// Initialize frontier and explored set

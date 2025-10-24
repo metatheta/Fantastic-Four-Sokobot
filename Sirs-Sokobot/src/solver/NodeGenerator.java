@@ -143,6 +143,10 @@ public class NodeGenerator {
 				}
 				
 				newState = generateState(boxSpace, state.boxes, searchedBox.spaces.get(boxSpace));
+				// SOMETHING GWEL ADDED V
+				if(newState == null) continue;
+				// SOMETHING GWEL ADDED V
+				newState.parentHashValue = state.hashCode();
 				states.add(newState);
 			}
 		}

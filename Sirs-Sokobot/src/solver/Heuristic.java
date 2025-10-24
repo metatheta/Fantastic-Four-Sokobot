@@ -73,7 +73,8 @@ public class Heuristic {
                         minDistance = distance;
                     }
                 }
-                manhattanGoal.put(31 * row + col, minDistance);
+                // SOMETHING GWEL CHANGED V
+                manhattanGoal.put(new Coords(row, col).hashCode(), minDistance);
             }
         }
     }

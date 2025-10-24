@@ -32,6 +32,7 @@ public class Coords implements Comparable<Coords> {
 		return 0;
 	}
 
+	// SOMETHING GWEL CHANGED V
 	@Override
     public int hashCode() {
 		return (int)Zob.hashSource[row][col];
