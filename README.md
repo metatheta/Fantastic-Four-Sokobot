@@ -5,5 +5,6 @@ states it wouldn't necessarily do so in a reasonable amount of time. Because of 
 my group made use of techniques such as manhattan distance as our heursitic, which 
 allowed for a more intelligent travel through the state space; we also used simple
 a simple corner deadlock checker, which eliminated the need of checking "lost cause"
-states; and we made use of push states where only a change in box position would be 
-considered it's own state, this limited the state space the bot needs to explore.
+states; we made use of push states where only a change in box position would be 
+considered it's own state, this limited the state space the bot needs to explore; and 
+lastly given the mention of heuristic, our bot uses A* to travel through the state space.
